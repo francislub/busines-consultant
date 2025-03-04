@@ -43,10 +43,6 @@ export default function Header() {
       ],
     },
     {
-      name: "Podcast",
-      href: "/services",
-    },
-    {
       name: "Articles",
       href: "#",
       dropdown: [
@@ -66,7 +62,7 @@ export default function Header() {
     },
     {
       name: "References",
-      href: "/contact",
+      href: "/references",
       dropdown: null,
     },
     {

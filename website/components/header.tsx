@@ -28,7 +28,7 @@ export default function Header() {
         { name: "About Us", href: "/whatwedo" },
         { name: "Coaches Vs Consultants", href: "/business-coaches" },
         { name: "Careers", href: "/careers" },
-        { name: "Resources", href: "/about/our-approach" },
+        { name: "Resources", href: "/resources" },
         { name: "Clients", href: "/about/our-approach" },
       ],
     },

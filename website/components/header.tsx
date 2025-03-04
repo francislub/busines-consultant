@@ -94,32 +94,45 @@ export default function Header() {
           <nav className="flex items-center space-x-6">
             {navItems.map((item) => (
               <div key={item.name} className="relative group">
-                <button
-                  className="text-white hover:text-red-500 flex items-center space-x-1 py-2"
-                  onClick={() => item.dropdown && toggleDropdown(item.name)}
-                >
-                  <span>{item.name}</span>
-                  {item.dropdown && <ChevronDown className="h-4 w-4" />}
-                </button>
+                {item.dropdown ? (
+                  // If item has dropdown, render a button that toggles the dropdown
+                  <>
+                    <button
+                      className="text-white hover:text-red-500 flex items-center space-x-1 py-2"
+                      onClick={() => toggleDropdown(item.name)}
+                    >
+                      <span>{item.name}</span>
+                      <ChevronDown className="h-4 w-4" />
+                    </button>
 
-                {item.dropdown && openDropdown === item.name && (
-                  <div className="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-md py-2 z-10">
-                    {item.dropdown.map((subItem) => (
-                      <Link
-                        key={subItem.name}
-                        href={subItem.href}
-                        className="block px-4 py-2 text-sm text-gray-800 hover:bg-red-500 hover:text-white"
-                      >
-                        {subItem.name}
-                      </Link>
-                    ))}
-                  </div>
+                    {openDropdown === item.name && (
+                      <div className="absolute left-0 mt-2 w-56 bg-white shadow-lg rounded-md py-2 z-10">
+                        {item.dropdown.map((subItem) => (
+                          <Link
+                            key={subItem.name}
+                            href={subItem.href}
+                            className="block px-4 py-2 text-sm text-gray-800 hover:bg-red-500 hover:text-white"
+                          >
+                            {subItem.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  // If item has no dropdown, render a direct link
+                  <Link href={item.href} className="text-white hover:text-red-500 py-2 block">
+                    {item.name}
+                  </Link>
                 )}
               </div>
             ))}
-          </nav> 
+          </nav>
 
-          <Link href="/contact" className="inline-flex items-center bg-red-600 hover:bg-white hover:text-red-600 text-white font-medium py-3 px-2 rounded-full transition-colors">
+          <Link
+            href="/contact"
+            className="inline-flex items-center bg-red-600 hover:bg-white hover:text-red-600 text-white font-medium py-3 px-2 rounded-full transition-colors"
+          >
             Free Consultations
           </Link>
         </div>

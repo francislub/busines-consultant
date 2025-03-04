@@ -26,7 +26,7 @@ export default function Header() {
       href: "#",
       dropdown: [
         { name: "About Us", href: "/whatwedo" },
-        { name: "Coaches Vs Consultants", href: "/about/our-team" },
+        { name: "Coaches Vs Consultants", href: "/business-coaches" },
         { name: "Careers", href: "/about/our-approach" },
         { name: "Resources", href: "/about/our-approach" },
         { name: "Clients", href: "/about/our-approach" },

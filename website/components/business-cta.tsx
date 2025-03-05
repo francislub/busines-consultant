@@ -102,7 +102,7 @@ export default function BusinessCTA() {
                 transition={{ delay: 1, duration: 0.6 }}
                 className="pt-4"
               >
-                <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="inline-block">
+                {/* <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="inline-block">
                   <Image
                     src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1.PNG-TxbgbG6eroFsCS8k1D5i4sJQfInEAO.png"
                     alt="Adam Cooper Signature"
@@ -110,7 +110,7 @@ export default function BusinessCTA() {
                     height={80}
                     className="mb-2"
                   />
-                </motion.div>
+                </motion.div> */}
                 <p className="font-bold text-xl">Adam Cooper, President</p>
               </motion.div>
             </motion.div>
@@ -132,7 +132,7 @@ export default function BusinessCTA() {
               className="relative rounded-full overflow-hidden border-4 border-orange-500/20 w-[300px] h-[300px] md:w-[400px] md:h-[400px]"
             >
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1.PNG-TxbgbG6eroFsCS8k1D5i4sJQfInEAO.png"
+                src="/images/ceo.jpg"
                 alt="Adam Cooper"
                 fill
                 className="object-cover"

@@ -6,7 +6,7 @@ import CoreTeam from "@/components/whatwedo/core-team"
 
 export default function WhatWeDo() {
   return (
-    <main className="min-h-screen bg-black">
+    <main className="min-h-screen ">
       <WhoWeAre />
       <OurStory />
       <OurPurpose />

@@ -1,7 +1,11 @@
-import { createNextRouteHandler } from "uploadthing/next"
-import { uploadRouter } from "@/lib/uploadthing"
+
+// import { createNextRouteHandler } from "uploadthing/next";
+
  
-// Export routes for Next App Router
-export const { GET, POST } = createNextRouteHandler({
-  router: uploadRouter,
-})
+import { createRouteHandler } from "uploadthing/next";
+import { ourFileRouter } from "./core";
+
+// Export routes for Next.js App Router
+export const { GET, POST } = createRouteHandler({
+  router: ourFileRouter,
+});

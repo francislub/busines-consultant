@@ -8,7 +8,7 @@ const teamSchema = z.object({
   name: z.string().min(1, "Name is required"),
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
-  image: z.string().url("Invalid image URL").optional(),
+  image: z.string().url("Invalid image URL").optional().or(z.literal("")),
 })
 
 // GET all team members

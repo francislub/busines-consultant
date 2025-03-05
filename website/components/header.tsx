@@ -126,7 +126,7 @@ export default function Header() {
           </nav>
 
           <Link
-            href="/contact"
+            href="/register"
             className="inline-flex items-center bg-red-600 hover:bg-white hover:text-red-600 text-white font-medium py-3 px-6 rounded-full transition-colors duration-300"
           >
             Free Consultations

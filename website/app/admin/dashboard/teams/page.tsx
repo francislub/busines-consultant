@@ -32,6 +32,7 @@ import { Textarea } from "@/components/ui/textarea"
 import AdminLayout from "@/components/admin-layout"
 import { useSession } from "next-auth/react"
 import { UploadImage } from "@/components/ui/upload-thing"
+import ImageInput from '@/components/ImageInput';
 import Image from "next/image"
 import { toast } from "sonner"
 
@@ -58,6 +59,7 @@ export default function TeamsPage() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [currentTeam, setCurrentTeam] = useState<any>(null)
+  const [imageUrl, setImageUrl] = useState("")
   const [formData, setFormData] = useState({
     name: "",
     title: "",
@@ -409,11 +411,12 @@ export default function TeamsPage() {
             </div>
             <div className="grid gap-2">
               <Label>Image</Label>
-              <UploadImage
+              <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="TeamImageUploader" label="Team Image"/>
+              {/* <UploadImage
                 endpoint="imageUploader"
                 value={formData.image}
                 onChange={(url) => setFormData({ ...formData, image: url || "" })}
-              />
+              /> */}
             </div>
           </div>
           <DialogFooter>

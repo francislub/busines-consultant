@@ -6,7 +6,7 @@ import Footer from "@/components/footer";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const hideLayout = ["/register", "/login","/client/dashboard","/client/dashboard/inquiries","/client/dashboard/consultations","/client/dashboard/messages"].includes(pathname);
+  const hideLayout = ["/register", "/login","/client/dashboard","/client/dashboard/inquiries","/client/dashboard/consultations","/client/dashboard/messages","/admin/dashboard","/admin/dashboard/stories","/admin/dashboard/articles","/admin/dashboard/teams","/admin/dashboard/comments","/forgot-password"].includes(pathname);
 
   return (
     <>

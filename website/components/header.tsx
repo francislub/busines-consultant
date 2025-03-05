@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronDown } from "lucide-react"
 import { motion } from "framer-motion"
+import { Logo } from "@/components/ui/logo"
 
 export default function Header() {
   const navItems = [
@@ -63,17 +64,10 @@ export default function Header() {
   ]
 
   return (
-    <header className="bg-black py-4 px-6 md:px-12 lg:px-20 sticky top-0 z-50">
+    <header className="bg-black py-4 md:px-12 lg:px-20 sticky top-0 z-50">
       <div className="mx-auto flex justify-between items-center">
-        <Link href="/" className="relative h-12 w-48">
-          <Image
-            src="https://sjc.microlink.io/y_nOOtcpgfwxhoJQ64tlBBnwOwM_l0OTOExsAT_Zcq3Y9kbzbEtU-j-GTyoiPLLblMJsMEDMe6ozOX4hoFS3RA.jpeg"
-            alt="Ascent Consulting Logo"
-            width={190}
-            height={48}
-            className="object-contain"
-            priority
-          />
+        <Link href="/">
+          <Logo variant="horizontal" size="md" darkMode={true} className="py-2" />
         </Link>
 
         <div className="hidden lg:flex items-center space-x-8">

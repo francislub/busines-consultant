@@ -6,6 +6,7 @@ import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { Facebook, Twitter, Linkedin, Youtube, Instagram } from "lucide-react"
+import { Logo } from "@/components/ui/logo"
 
 const SocialLink = ({
   href,
@@ -54,15 +55,9 @@ export default function Footer() {
           {/* Logo and tagline */}
           <motion.div variants={itemVariants} className="space-y-6">
             <div className="flex items-center space-x-4">
-              <div className="relative h-16 w-16">
-                <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/footer.PNG-fR6lT9jC7hbJStciUINjVrjxZsUxGI.png"
-                  alt="Ascent Consulting Logo"
-                  width={64}
-                  height={64}
-                  className="object-contain"
-                />
-              </div>
+              <Link href="/">
+                <Logo variant="horizontal" size="md" darkMode={true} className="py-2" />
+              </Link>
             </div>
             <p className="text-lg font-medium">
               Ascent is committed to helping our clients build better construction companies for profitability and

@@ -33,6 +33,7 @@ import AdminLayout from "@/components/admin-layout"
 import { useSession } from "next-auth/react"
 import { UploadImage } from "@/components/ui/upload-thing"
 import Image from "next/image"
+import ImageInput from '@/components/ImageInput';
 import { toast } from "sonner"
 
 // Mock data for stories
@@ -55,6 +56,7 @@ export default function StoriesPage() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [currentStory, setCurrentStory] = useState<any>(null)
+  const [imageUrl, setImageUrl] = useState("")
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -105,7 +107,7 @@ export default function StoriesPage() {
 
   const handleCreateStory = async () => {
     try {
-      if (!formData.title || !formData.description || !formData.image) {
+      if (!formData.title || !formData.description) {
         toast.error("Please fill all required fields")
         return
       }
@@ -209,7 +211,7 @@ export default function StoriesPage() {
                 Add Story
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px] h-[calc(120vh-100px)] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Create New Success Story</DialogTitle>
                 <DialogDescription>Add a new success story to showcase your work.</DialogDescription>
@@ -235,12 +237,14 @@ export default function StoriesPage() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label>Image</Label>
+                <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="TeamImageUploader" label="Profile Image"/>
+               
+                  {/* <Label>Image</Label>
                   <UploadImage
                     endpoint="imageUploader"
                     value={formData.image}
                     onChange={(url) => setFormData({ ...formData, image: url || "" })}
-                  />
+                  /> */}
                 </div>
               </div>
               <DialogFooter>
@@ -367,7 +371,7 @@ export default function StoriesPage() {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] h-[calc(120vh-100px)] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Success Story</DialogTitle>
             <DialogDescription>Make changes to the success story.</DialogDescription>
@@ -391,12 +395,14 @@ export default function StoriesPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label>Image</Label>
+            <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="TeamImageUploader" label="Profile Image"/>
+               
+              {/* <Label>Image</Label>
               <UploadImage
                 endpoint="imageUploader"
                 value={formData.image}
                 onChange={(url) => setFormData({ ...formData, image: url || "" })}
-              />
+              /> */}
             </div>
           </div>
           <DialogFooter>

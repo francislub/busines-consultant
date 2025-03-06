@@ -206,7 +206,7 @@ export default function TeamsPage() {
 
   return (
     <AdminLayout>
-      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
+      <div className="flex-1 space-y-4 p-4 md:p-8 pt-6 ">
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold tracking-tight">Team Members</h2>
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
@@ -216,7 +216,7 @@ export default function TeamsPage() {
                 Add Team Member
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px] h-[calc(120vh-100px)] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Create New Team Member</DialogTitle>
                 <DialogDescription>Add a new team member to your organization.</DialogDescription>
@@ -250,14 +250,8 @@ export default function TeamsPage() {
                     rows={5}
                   />
                 </div>
-                <div className="grid gap-2">
-                  <Label>Image</Label>
-                  <UploadImage
-                    endpoint="imageUploader"
-                    value={formData.image}
-                    onChange={(url) => setFormData({ ...formData, image: url || "" })}
-                  />
-                </div>
+                <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="TeamImageUploader" label="Profile Image"/>
+                  
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
@@ -378,7 +372,7 @@ export default function TeamsPage() {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] h-[calc(120vh-100px)] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Team Member</DialogTitle>
             <DialogDescription>Make changes to the team member.</DialogDescription>
@@ -410,8 +404,7 @@ export default function TeamsPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label>Image</Label>
-              <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="TeamImageUploader" label="Team Image"/>
+              <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="TeamImageUploader" label="Profile Image"/>
               {/* <UploadImage
                 endpoint="imageUploader"
                 value={formData.image}

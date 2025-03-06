@@ -40,7 +40,8 @@ export function Logo({
   }
 
   const logoSize = sizeMap[size]
-  const textColor = darkMode ? "text-white" : "text-black"
+  const isWhiteBg = className?.includes("bg-white");
+  const textColor = isWhiteBg ? "text-black" : darkMode ? "text-slate-500" : "text-black";
   const companyColor = "text-red-600"
 
   // Animation variants

@@ -7,7 +7,7 @@ import { z } from "zod"
 const storySchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
-  image: z.string().url("Invalid image URL"),
+  image: z.string().url("Invalid image URL").optional().or(z.literal("")),
 })
 
 // GET all stories

@@ -34,6 +34,7 @@ import { useSession } from "next-auth/react"
 import { UploadImage } from "@/components/ui/upload-thing"
 import Image from "next/image"
 import { toast } from "sonner"
+import ImageInput from '@/components/ImageInput';
 
 // Mock data for articles
 const mockArticles = Array.from({ length: 10 }).map((_, i) => ({
@@ -51,6 +52,7 @@ export default function ArticlesPage() {
   const [articles, setArticles] = useState(mockArticles)
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
+  const [imageUrl, setImageUrl] = useState("")
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -105,7 +107,7 @@ export default function ArticlesPage() {
 
   const handleCreateArticle = async () => {
     try {
-      if (!formData.title || !formData.description || !formData.image) {
+      if (!formData.title || !formData.description ) {
         toast.error("Please fill all required fields")
         return
       }
@@ -209,7 +211,7 @@ export default function ArticlesPage() {
                 Add Article
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px] h-[calc(120vh-100px)] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Create New Article</DialogTitle>
                 <DialogDescription>Add a new article to share with your clients.</DialogDescription>
@@ -235,12 +237,14 @@ export default function ArticlesPage() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label>Image</Label>
+                <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="TeamImageUploader" label="Profile Image"/>
+                
+                  {/* <Label>Image</Label>
                   <UploadImage
                     endpoint="imageUploader"
                     value={formData.image}
                     onChange={(url) => setFormData({ ...formData, image: url || "" })}
-                  />
+                  /> */}
                 </div>
               </div>
               <DialogFooter>
@@ -367,7 +371,7 @@ export default function ArticlesPage() {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+        <DialogContent className="sm:max-w-[600px] h-[calc(120vh-100px)] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Edit Article</DialogTitle>
             <DialogDescription>Make changes to the article.</DialogDescription>
@@ -391,12 +395,14 @@ export default function ArticlesPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label>Image</Label>
+            <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="TeamImageUploader" label="Profile Image"/>
+                
+              {/* <Label>Image</Label>
               <UploadImage
                 endpoint="imageUploader"
                 value={formData.image}
                 onChange={(url) => setFormData({ ...formData, image: url || "" })}
-              />
+              /> */}
             </div>
           </div>
           <DialogFooter>

@@ -5,30 +5,70 @@ import { useRouter } from "next/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
-import { Calendar, MessageSquare, FileText, Clock, RefreshCw, PlusCircle } from "lucide-react"
+import { Calendar, MessageSquare, FileText, Clock, RefreshCw, PlusCircle, Loader2 } from "lucide-react"
 import ClientLayout from "@/components/client-layout"
 import { useSession } from "next-auth/react"
+import { format, formatDistanceToNow } from "date-fns"
+import { toast } from "sonner"
 
-// Mock data for client dashboard
-const mockClientData = {
-  inquiries: 3,
-  messages: 5,
-  consultations: 2,
-  recentInquiries: [
-    { id: "1", subject: "Business Consulting", status: "PENDING", createdAt: new Date() },
-    { id: "2", subject: "Marketing Strategy", status: "IN_PROGRESS", createdAt: new Date(Date.now() - 86400000) },
-  ],
-  upcomingConsultations: [
-    { id: "1", subject: "Initial Consultation", date: new Date(Date.now() + 172800000), status: "CONFIRMED" },
-    { id: "2", subject: "Follow-up Meeting", date: new Date(Date.now() + 604800000), status: "REQUESTED" },
-  ],
+// Define types for our client data
+interface ClientData {
+  inquiries: number
+  messages: number
+  consultations: number
+  recentInquiries: {
+    id: string
+    subject: string
+    message: string
+    status: string
+    createdAt: string
+  }[]
+  upcomingConsultations: {
+    id: string
+    subject: string
+    description: string
+    date: string
+    status: string
+  }[]
+  recentMessages: {
+    id: string
+    content: string
+    isRead: boolean
+    createdAt: string
+  }[]
 }
 
 export default function ClientDashboard() {
   const router = useRouter()
   const { data: session, status } = useSession()
-  const [clientData, setClientData] = useState(mockClientData)
+  const [clientData, setClientData] = useState<ClientData | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  // Function to fetch client data
+  const fetchClientData = async () => {
+    try {
+      setIsRefreshing(true)
+      const response = await fetch("/api/client/dashboard")
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch dashboard data")
+      }
+
+      const data = await response.json()
+      setClientData(data)
+
+      if (isRefreshing) {
+        toast.success("Dashboard data refreshed")
+      }
+    } catch (error) {
+      console.error("Error fetching client data:", error)
+      toast.error("Failed to load dashboard data")
+    } finally {
+      setIsLoading(false)
+      setIsRefreshing(false)
+    }
+  }
 
   useEffect(() => {
     // Check authentication and role
@@ -42,48 +82,43 @@ export default function ClientDashboard() {
       return
     }
 
-    // Fetch client data
-    const fetchClientData = async () => {
-      try {
-        // In a real app, you would fetch actual data here
-        // const inquiriesRes = await fetch("/api/client/inquiries")
-        // const messagesRes = await fetch("/api/client/messages")
-        // const consultationsRes = await fetch("/api/client/consultations")
-
-        // const inquiries = await inquiriesRes.json()
-        // const messages = await messagesRes.json()
-        // const consultations = await consultationsRes.json()
-
-        // setClientData({
-        //   inquiries: inquiries.length,
-        //   messages: messages.length,
-        //   consultations: consultations.length,
-        //   recentInquiries: inquiries.slice(0, 5),
-        //   upcomingConsultations: consultations
-        //     .filter(c => new Date(c.date) > new Date())
-        //     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
-        //     .slice(0, 5),
-        // })
-
-        // Using mock data for now
-        setClientData(mockClientData)
-        setIsLoading(false)
-      } catch (error) {
-        console.error("Error fetching client data:", error)
-        setIsLoading(false)
-      }
-    }
-
+    // Fetch client data when authenticated
     if (status === "authenticated") {
       fetchClientData()
     }
   }, [status, session, router])
 
+  // Handle refresh button click
+  const handleRefresh = () => {
+    fetchClientData()
+  }
+
+  // Handle new inquiry button click
+  const handleNewInquiry = () => {
+    router.push("/client/dashboard/inquiries/new")
+  }
+
+  // Loading state
   if (status === "loading" || isLoading) {
     return (
       <ClientLayout>
-        <div className="flex items-center justify-center h-screen">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+        <div className="flex flex-col items-center justify-center h-screen">
+          <Loader2 className="h-12 w-12 animate-spin text-red-600" />
+          <p className="mt-4 text-gray-500">Loading dashboard data...</p>
+        </div>
+      </ClientLayout>
+    )
+  }
+
+  // If client data is not available
+  if (!clientData) {
+    return (
+      <ClientLayout>
+        <div className="flex flex-col items-center justify-center h-screen">
+          <p className="text-gray-500">No data available</p>
+          <Button onClick={handleRefresh} className="mt-4">
+            Try Again
+          </Button>
         </div>
       </ClientLayout>
     )
@@ -95,11 +130,20 @@ export default function ClientDashboard() {
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold tracking-tight">Client Dashboard</h2>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" className="h-9 gap-1">
-              <RefreshCw className="h-4 w-4" />
-              <span className="hidden sm:inline">Refresh</span>
+            <Button variant="outline" size="sm" className="h-9 gap-1" onClick={handleRefresh} disabled={isRefreshing}>
+              {isRefreshing ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="hidden sm:inline">Refreshing...</span>
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="h-4 w-4" />
+                  <span className="hidden sm:inline">Refresh</span>
+                </>
+              )}
             </Button>
-            <Button size="sm" className="h-9 gap-1 bg-red-600 hover:bg-red-700">
+            <Button size="sm" className="h-9 gap-1 bg-red-600 hover:bg-red-700" onClick={handleNewInquiry}>
               <PlusCircle className="h-4 w-4" />
               <span className="hidden sm:inline">New Request</span>
             </Button>
@@ -165,16 +209,18 @@ export default function ClientDashboard() {
                 <CardContent>
                   <div className="space-y-8">
                     {clientData.recentInquiries.length > 0 ? (
-                      clientData.recentInquiries.map((inquiry, i) => (
+                      clientData.recentInquiries.map((inquiry) => (
                         <div key={inquiry.id} className="flex items-center">
                           <div className="mr-4 rounded-full bg-red-100 p-2">
                             <MessageSquare className="h-4 w-4 text-red-600" />
                           </div>
                           <div className="space-y-1">
                             <p className="text-sm font-medium leading-none">{inquiry.subject}</p>
-                            <p className="text-sm text-muted-foreground">Status: {inquiry.status.replace("_", " ")}</p>
+                            <p className="text-sm text-muted-foreground">Status: {formatStatus(inquiry.status)}</p>
                           </div>
-                          <div className="ml-auto text-xs text-muted-foreground">{i === 0 ? "Today" : "Yesterday"}</div>
+                          <div className="ml-auto text-xs text-muted-foreground">
+                            {formatTimeAgo(inquiry.createdAt)}
+                          </div>
                         </div>
                       ))
                     ) : (
@@ -199,10 +245,10 @@ export default function ClientDashboard() {
                           </div>
                           <div className="space-y-1">
                             <p className="text-sm font-medium leading-none">{consultation.subject}</p>
-                            <p className="text-sm text-muted-foreground">Status: {consultation.status}</p>
+                            <p className="text-sm text-muted-foreground">Status: {formatStatus(consultation.status)}</p>
                           </div>
                           <div className="ml-auto text-xs text-muted-foreground">
-                            {new Date(consultation.date).toLocaleDateString()}
+                            {format(new Date(consultation.date), "MMM d, yyyy")}
                           </div>
                         </div>
                       ))
@@ -217,36 +263,163 @@ export default function ClientDashboard() {
 
           <TabsContent value="inquiries" className="space-y-4">
             <Card>
-              <CardHeader>
-                <CardTitle>Your Inquiries</CardTitle>
-                <CardDescription>View and manage your inquiries</CardDescription>
+              <CardHeader className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Your Inquiries</CardTitle>
+                  <CardDescription>View and manage your inquiries</CardDescription>
+                </div>
+                <Button size="sm" className="bg-red-600 hover:bg-red-700" onClick={handleNewInquiry}>
+                  <PlusCircle className="h-4 w-4 mr-2" />
+                  New Inquiry
+                </Button>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Inquiry management interface would go here</p>
+                <div className="space-y-6">
+                  {clientData.recentInquiries.length > 0 ? (
+                    clientData.recentInquiries.map((inquiry) => (
+                      <div key={inquiry.id} className="border-b pb-4 last:border-0">
+                        <div className="flex justify-between items-start mb-2">
+                          <h3 className="font-medium">{inquiry.subject}</h3>
+                          <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(inquiry.status)}`}>
+                            {formatStatus(inquiry.status)}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-2 line-clamp-2">{inquiry.message}</p>
+                        <div className="flex justify-between items-center text-xs text-gray-500">
+                          <span>{format(new Date(inquiry.createdAt), "MMMM d, yyyy")}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => router.push(`/client/dashboard/inquiries/${inquiry.id}`)}
+                          >
+                            View Details
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-gray-500 mb-4">You haven't submitted any inquiries yet</p>
+                      <Button className="bg-red-600 hover:bg-red-700" onClick={handleNewInquiry}>
+                        Submit Your First Inquiry
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="consultations" className="space-y-4">
             <Card>
-              <CardHeader>
-                <CardTitle>Your Consultations</CardTitle>
-                <CardDescription>Schedule and manage your consultation sessions</CardDescription>
+              <CardHeader className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Your Consultations</CardTitle>
+                  <CardDescription>Schedule and manage your consultation sessions</CardDescription>
+                </div>
+                <Button
+                  size="sm"
+                  className="bg-red-600 hover:bg-red-700"
+                  onClick={() => router.push("/client/dashboard/consultations/schedule")}
+                >
+                  <Calendar className="h-4 w-4 mr-2" />
+                  Schedule Consultation
+                </Button>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Consultation management interface would go here</p>
+                <div className="space-y-6">
+                  {clientData.upcomingConsultations.length > 0 ? (
+                    clientData.upcomingConsultations.map((consultation) => (
+                      <div key={consultation.id} className="border-b pb-4 last:border-0">
+                        <div className="flex justify-between items-start mb-2">
+                          <h3 className="font-medium">{consultation.subject}</h3>
+                          <span className={`text-xs px-2 py-1 rounded-full ${getStatusColor(consultation.status)}`}>
+                            {formatStatus(consultation.status)}
+                          </span>
+                        </div>
+                        <p className="text-sm text-gray-600 mb-2 line-clamp-2">{consultation.description}</p>
+                        <div className="flex justify-between items-center text-xs text-gray-500">
+                          <span>
+                            <Calendar className="h-3 w-3 inline mr-1" />
+                            {format(new Date(consultation.date), "MMMM d, yyyy 'at' h:mm a")}
+                          </span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => router.push(`/client/dashboard/consultations/${consultation.id}`)}
+                          >
+                            View Details
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-gray-500 mb-4">You don't have any upcoming consultations</p>
+                      <Button
+                        className="bg-red-600 hover:bg-red-700"
+                        onClick={() => router.push("/client/dashboard/consultations/schedule")}
+                      >
+                        Schedule Your First Consultation
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
 
           <TabsContent value="messages" className="space-y-4">
             <Card>
-              <CardHeader>
-                <CardTitle>Your Messages</CardTitle>
-                <CardDescription>View and send messages to our team</CardDescription>
+              <CardHeader className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Your Messages</CardTitle>
+                  <CardDescription>View and send messages to our team</CardDescription>
+                </div>
+                <Button
+                  size="sm"
+                  className="bg-red-600 hover:bg-red-700"
+                  onClick={() => router.push("/client/dashboard/messages/new")}
+                >
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  New Message
+                </Button>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-muted-foreground">Messaging interface would go here</p>
+                <div className="space-y-6">
+                  {clientData.recentMessages.length > 0 ? (
+                    clientData.recentMessages.map((message) => (
+                      <div key={message.id} className="border-b pb-4 last:border-0">
+                        <div className="flex justify-between items-start mb-2">
+                          <h3 className="font-medium line-clamp-1">{message.content.substring(0, 50)}...</h3>
+                          {!message.isRead && (
+                            <span className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800">New</span>
+                          )}
+                        </div>
+                        <div className="flex justify-between items-center text-xs text-gray-500">
+                          <span>{formatTimeAgo(message.createdAt)}</span>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => router.push(`/client/dashboard/messages/${message.id}`)}
+                          >
+                            View Message
+                          </Button>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-gray-500 mb-4">You don't have any messages</p>
+                      <Button
+                        className="bg-red-600 hover:bg-red-700"
+                        onClick={() => router.push("/client/dashboard/messages/new")}
+                      >
+                        Send Your First Message
+                      </Button>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
@@ -254,5 +427,44 @@ export default function ClientDashboard() {
       </div>
     </ClientLayout>
   )
+}
+
+// Helper function to format status strings
+function formatStatus(status: string): string {
+  return status
+    .replace(/_/g, " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase())
+}
+
+// Helper function to get status color
+function getStatusColor(status: string): string {
+  switch (status) {
+    case "PENDING":
+      return "bg-yellow-100 text-yellow-800"
+    case "IN_PROGRESS":
+      return "bg-blue-100 text-blue-800"
+    case "RESOLVED":
+    case "COMPLETED":
+      return "bg-green-100 text-green-800"
+    case "CANCELLED":
+      return "bg-red-100 text-red-800"
+    case "REQUESTED":
+      return "bg-purple-100 text-purple-800"
+    case "CONFIRMED":
+      return "bg-teal-100 text-teal-800"
+    default:
+      return "bg-gray-100 text-gray-800"
+  }
+}
+
+// Helper function to format time ago
+function formatTimeAgo(dateString: string): string {
+  try {
+    const date = new Date(dateString)
+    return formatDistanceToNow(date, { addSuffix: true })
+  } catch (error) {
+    return "Invalid date"
+  }
 }
 

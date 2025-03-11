@@ -3,6 +3,7 @@
 import { useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import { ArrowRight } from "lucide-react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 export default function CoachingSection() {
@@ -54,9 +55,12 @@ export default function CoachingSection() {
           >
             <h3 className="text-3xl md:text-4xl font-bold">Interested in Joining our Team?</h3>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Link
+                href="/register">
               <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white rounded-full px-8">
                 Apply Now <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
+              </Link>
             </motion.div>
           </motion.div>
 
@@ -76,9 +80,12 @@ export default function CoachingSection() {
               Consultation Now
             </h3>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Link
+                href="/contact">
               <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white rounded-full px-8">
                 Book Now <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
+              </Link>
             </motion.div>
           </motion.div>
         </motion.div>

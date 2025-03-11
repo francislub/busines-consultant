@@ -60,7 +60,7 @@ export default function Footer() {
               </Link>
             </div>
             <p className="text-lg font-medium">
-              Ascent is committed to helping our clients build better construction companies for profitability and
+              Mancha Development Company is committed to helping our clients build better construction companies for profitability and
               performance.
             </p>
             <p className="text-zinc-400">We build better construction companies.</p>
@@ -79,7 +79,7 @@ export default function Footer() {
               <p className="flex items-center space-x-2">
                 <span className="text-zinc-400">Email:</span>
                 <a href="mailto:info@ascentconsults.com" className="hover:text-red-500 transition-colors">
-                  info@ascentconsults.com
+                  info@xxxxxxxxxxxxxx.com
                 </a>
               </p>
               <p className="flex items-center space-x-2">
@@ -97,7 +97,7 @@ export default function Footer() {
             <address className="not-italic text-zinc-400 leading-relaxed">
               400 Interstate North Pkwy,
               <br />
-              Suite 500, Atlanta, GA 30339
+              Dar Es Salaam
             </address>
           </motion.div>
 
@@ -125,7 +125,7 @@ export default function Footer() {
           <Link href="/privacy-policy" className="text-zinc-400 hover:text-white mb-4 md:mb-0">
             Privacy Policy
           </Link>
-          <p className="text-zinc-400">© {currentYear} Ascent Consulting. All Rights Reserved.</p>
+          <p className="text-zinc-400">© {currentYear} Mancha Development Company. All Rights Reserved.</p>
         </motion.div>
       </div>
     </footer>

@@ -10,19 +10,57 @@ const articleSchema = z.object({
   image: z.string().url("Invalid image URL").or(z.literal("")).or(z.null()).optional(),
 })
 
-// GET all articles
+// GET all articles by the admin
+// export async function GET() {
+//   try {
+//     const session = await getServerSession(authOptions)
+
+//     if (!session || !session.user) {
+//       return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+//     }
+
+//     if (session.user.role !== "ADMIN") {
+//       return NextResponse.json({ message: "Forbidden" }, { status: 403 })
+//     }
+
+//     const articles = await prisma.article.findMany({
+//       orderBy: {
+//         createdAt: "desc",
+//       },
+//       include: {
+//         author: {
+//           select: {
+//             id: true,
+//             name: true,
+//             email: true,
+//           },
+//         },
+//         comments: {
+//           select: {
+//             id: true,
+//             content: true,
+//             createdAt: true,
+//             author: {
+//               select: {
+//                 id: true,
+//                 name: true,
+//               },
+//             },
+//           },
+//         },
+//       },
+//     })
+
+//     return NextResponse.json(articles)
+//   } catch (error) {
+//     console.error("Error fetching articles:", error)
+//     return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+//   }
+// }
+
+// GET BY ALL USERS
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
-
-    if (!session || !session.user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
-    }
-
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ message: "Forbidden" }, { status: 403 })
-    }
-
     const articles = await prisma.article.findMany({
       orderBy: {
         createdAt: "desc",
@@ -57,6 +95,7 @@ export async function GET() {
     return NextResponse.json({ message: "Internal server error" }, { status: 500 })
   }
 }
+
 
 // POST a new article
 export async function POST(req: Request) {

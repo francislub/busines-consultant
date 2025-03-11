@@ -7,7 +7,7 @@ import { z } from "zod"
 const articleSchema = z.object({
   title: z.string().min(1, "Title is required").optional(),
   description: z.string().min(1, "Description is required").optional(),
-  image: z.string().url("Invalid image URL").optional(),
+  image: z.string().url("Invalid image URL").or(z.literal("")).or(z.null()).optional(),
 })
 
 // GET a specific article
@@ -48,7 +48,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     })
 
     if (!article) {
-      return NextResponse.json({ message: "Article not found" }, { status: 404 })
+      return NextResponse.json({ message: "Article not founds" }, { status: 404 })
     }
 
     return NextResponse.json(article)
@@ -82,7 +82,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     })
 
     if (!existingArticle) {
-      return NextResponse.json({ message: "Article not found" }, { status: 404 })
+      return NextResponse.json({ message: "Article not founds" }, { status: 404 })
     }
 
     // Update article
@@ -128,7 +128,7 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     })
 
     if (!existingArticle) {
-      return NextResponse.json({ message: "Article not found" }, { status: 404 })
+      return NextResponse.json({ message: "Article not founds" }, { status: 404 })
     }
 
     // Delete related comments first

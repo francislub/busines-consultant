@@ -1,45 +1,58 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 
 interface Article {
-  id: number
+  id: string
   title: string
-  slug: string
   image: string
   category: string
+  excerpt?: string
+  createdAt: Date
 }
 
 export default function LatestArticles() {
-  const articles: Article[] = [
-    {
-      id: 1,
-      title: "Sales vs. Marketing: Key Differences Every Contractor Should Know",
-      slug: "sales-vs-marketing",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/articleas.PNG-tRK2B0VHbIQ0rcvmXkLERfOd6XqEYf.png",
-      category: "Marketing",
-    },
-    {
-      id: 2,
-      title: "Rewarding Construction Project Managers – Incentive Packages Part III",
-      slug: "rewarding-project-managers",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/articleas.PNG-tRK2B0VHbIQ0rcvmXkLERfOd6XqEYf.png",
-      category: "Management",
-    },
-    {
-      id: 3,
-      title: "Markup and Margin: The Math Matters",
-      slug: "markup-and-margin",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/articleas.PNG-tRK2B0VHbIQ0rcvmXkLERfOd6XqEYf.png",
-      category: "Finance",
-    },
-  ]
+  const [articles, setArticles] = useState<Article[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [hoveredArticle, setHoveredArticle] = useState<string | null>(null)
 
-  const [hoveredArticle, setHoveredArticle] = useState<number | null>(null)
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        const response = await fetch("/api/admin/articles")
+        const data = await response.json()
+        setArticles(data)
+      } catch (error) {
+        console.error("Error fetching articles:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchArticles()
+  }, [])
+
+  if (isLoading) {
+    return (
+      <section className="w-full bg-black py-20 px-4 md:px-8 lg:px-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="animate-pulse">
+                <div className="rounded-lg bg-zinc-800 h-48 mb-6"></div>
+                <div className="h-6 bg-zinc-800 rounded w-3/4 mb-4"></div>
+                <div className="h-4 bg-zinc-800 rounded w-1/4"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="w-full bg-black py-20 px-4 md:px-8 lg:px-12">
@@ -69,7 +82,7 @@ export default function LatestArticles() {
               onHoverStart={() => setHoveredArticle(article.id)}
               onHoverEnd={() => setHoveredArticle(null)}
             >
-              <Link href={`/articles/${article.slug}`} className="block">
+              <Link href={`/articles/${article.id}`} className="block">
                 <div className="relative overflow-hidden rounded-lg mb-6">
                   <div className="aspect-w-16 aspect-h-9 bg-zinc-800">
                     <Image
@@ -89,6 +102,8 @@ export default function LatestArticles() {
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-4 transition-colors group-hover:text-red-500">
                   {article.title}
                 </h3>
+
+                {article.excerpt && <p className="text-zinc-400 mb-4 line-clamp-2">{article.excerpt}</p>}
 
                 <div className="flex items-center">
                   <span className="text-zinc-400 mr-2">Read More</span>

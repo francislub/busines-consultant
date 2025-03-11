@@ -16,7 +16,7 @@ export default function Home() {
       <WhatWeDo/>
       <HeroBanner />
       <BusinessCTA />
-      <PhotoGallery />
+      {/* <PhotoGallery /> */}
       <SuccessStories />
       <ResourcesSection />
       <LatestArticles />

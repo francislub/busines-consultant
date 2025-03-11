@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useSession, signOut } from "next-auth/react"
-import { LayoutDashboard, FileText, Users, MessageSquare, LogOut, Menu, X } from 'lucide-react'
+import { LayoutDashboard, FileText, Users, MessageSquare, LogOut, Menu, X ,Mail, Settings} from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -21,6 +21,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { name: "Articles", href: "/admin/dashboard/articles", icon: FileText },
     { name: "Team", href: "/admin/dashboard/teams", icon: Users },
     { name: "Comments", href: "/admin/dashboard/comments", icon: MessageSquare },
+    {
+      name: "Contacts",
+      href: "/admin/dashboard/contacts",
+      icon: Mail,
+    },
+    {
+      name: "Settings",
+      href: "/admin/dashboard/settings",
+      icon: Settings,
+    },
   ]
 
   return (

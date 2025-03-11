@@ -35,6 +35,7 @@ export default function ContactForm() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
   })
@@ -42,18 +43,27 @@ export default function ContactForm() {
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true)
     try {
-      // Handle form submission here
-      console.log(data)
+      const response = await fetch("/api/contacts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Failed to submit form")
+      }
 
       toast.success("Your message has been sent successfully!")
       reset()
     } catch (error) {
+      console.error("Form submission error:", error)
       toast.error("There was an error sending your message. Please try again.")
+    } finally {
+      setIsSubmitting(false)
     }
-    setIsSubmitting(false)
   }
 
   const states = [
@@ -104,13 +114,13 @@ export default function ContactForm() {
     "Vermont",
     "Virginia",
     "Washington",
-    "West Virginia",
-    "Wisconsin",
-    "Wyoming",
+    "Tanzania",
+    "Kenya",
+    "Uganda",
   ]
 
   return (
-    <section className="bg-black text-white py-16 md:py-24">
+    <section className="bg-white text-black py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
           <motion.div
@@ -130,7 +140,7 @@ export default function ContactForm() {
             <div>
               <p className="text-gray-400">
                 Not into forms?{" "}
-                <Link href="/schedule" className="text-red-500 hover:text-red-400 underline">
+                <Link href="/register" className="text-red-500 hover:text-red-400 underline">
                   Schedule a free consultation!
                 </Link>
               </p>
@@ -140,43 +150,43 @@ export default function ContactForm() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name*</Label>
-                  <Input id="firstName" {...register("firstName")} className="bg-gray-900 border-gray-800" />
+                  <Input id="firstName" {...register("firstName")} className="bg-white border-slate-800" />
                   {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName.message}</p>}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="lastName">Last Name*</Label>
-                  <Input id="lastName" {...register("lastName")} className="bg-gray-900 border-gray-800" />
+                  <Input id="lastName" {...register("lastName")} className="bg-white border-slate-800" />
                   {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName.message}</p>}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="email">Email*</Label>
-                  <Input id="email" type="email" {...register("email")} className="bg-gray-900 border-gray-800" />
+                  <Input id="email" type="email" {...register("email")} className="bg-white border-slate-800" />
                   {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number*</Label>
-                  <Input id="phone" {...register("phone")} className="bg-gray-900 border-gray-800" />
+                  <Input id="phone" {...register("phone")} className="bg-white border-slate-800" />
                   {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="company">Company Name*</Label>
-                  <Input id="company" {...register("company")} className="bg-gray-900 border-gray-800" />
+                  <Input id="company" {...register("company")} className="bg-white border-slate-800" />
                   {errors.company && <p className="text-red-500 text-sm">{errors.company.message}</p>}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="website">Website URL</Label>
-                  <Input id="website" {...register("website")} className="bg-gray-900 border-gray-800" />
+                  <Input id="website" {...register("website")} className="bg-white border-slate-800" />
                   {errors.website && <p className="text-red-500 text-sm">{errors.website.message}</p>}
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="city">City*</Label>
-                  <Input id="city" {...register("city")} className="bg-gray-900 border-gray-800" />
+                  <Input id="city" {...register("city")} className="bg-white border-slate-800" />
                   {errors.city && <p className="text-red-500 text-sm">{errors.city.message}</p>}
                 </div>
 
@@ -184,10 +194,10 @@ export default function ContactForm() {
                   <Label htmlFor="state">State*</Label>
                   <Select
                     onValueChange={(value) => {
-                      register("state").onChange({ target: { value } })
+                      setValue("state", value)
                     }}
                   >
-                    <SelectTrigger className="bg-gray-900 border-gray-800">
+                    <SelectTrigger className="bg-white border-slate-800">
                       <SelectValue placeholder="Select state" />
                     </SelectTrigger>
                     <SelectContent>
@@ -204,7 +214,7 @@ export default function ContactForm() {
 
               <div className="space-y-2">
                 <Label htmlFor="message">How can we help you?*</Label>
-                <Textarea id="message" {...register("message")} className="bg-gray-900 border-gray-800 min-h-[150px]" />
+                <Textarea id="message" {...register("message")} className="bg-white border-slate-800 min-h-[150px]" />
                 {errors.message && <p className="text-red-500 text-sm">{errors.message.message}</p>}
               </div>
 

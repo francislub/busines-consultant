@@ -33,15 +33,26 @@ enum Role {
 }
 
 model Story {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String
   image       String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  author      User      @relation(fields: [authorId], references: [id])
-  authorId    String    @db.ObjectId
+  category    StoryCategory
+  slug        String        @unique
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  author      User          @relation(fields: [authorId], references: [id])
+  authorId    String        @db.ObjectId
   comments    Comment[]
+}
+
+enum StoryCategory {
+  OPERATIONAL_ASSESSMENT
+  OPERATIONS
+  PROCORE
+  SOFTWARE_ERP
+  MARKETING
+  BONUS_PROGRAMS
 }
 
 model Article {

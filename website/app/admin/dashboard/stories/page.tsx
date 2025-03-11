@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
-import { PlusCircle, Pencil, Trash2, Search, ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react'
+import { PlusCircle, Pencil, Trash2, Search, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -29,38 +29,45 @@ import {
 } from "@/components/ui/alert-dialog"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import AdminLayout from "@/components/admin-layout"
 import { useSession } from "next-auth/react"
-import { UploadImage } from "@/components/ui/upload-thing"
 import Image from "next/image"
-import ImageInput from '@/components/ImageInput';
 import { toast } from "sonner"
+import ImageInput from '@/components/ImageInput';
 
-// Mock data for stories
-const mockStories = Array.from({ length: 10 }).map((_, i) => ({
-  id: `story-${i + 1}`,
-  title: `Success Story ${i + 1}`,
-  description: `This is a description for success story ${i + 1}. It showcases our work with a client.`,
-  image: `/placeholder.svg?height=400&width=600`,
-  createdAt: new Date(Date.now() - Math.floor(Math.random() * 10000000000)),
-  updatedAt: new Date(Date.now() - Math.floor(Math.random() * 1000000000)),
-}))
+// Define the categories
+const categories = ["Operational Assessment", "Operations", "Procore", "Software & ERP", "Marketing", "Bonus Programs"]
+
+interface Story {
+  id: string
+  title: string
+  description: string
+  image: string
+  category: string
+  createdAt: string
+}
 
 export default function StoriesPage() {
   const router = useRouter()
   const { data: session, status } = useSession()
-  const [stories, setStories] = useState(mockStories)
+  const [stories, setStories] = useState<Story[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [currentStory, setCurrentStory] = useState<any>(null)
   const [imageUrl, setImageUrl] = useState("")
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [currentStory, setCurrentStory] = useState<Story | null>(null)
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     image: "",
+    category: "",
+  })
+  const [pagination, setPagination] = useState({
+    page: 1,
+    totalPages: 1,
   })
 
   useEffect(() => {
@@ -76,28 +83,29 @@ export default function StoriesPage() {
     }
 
     // Fetch stories
-    const fetchStories = async () => {
-      try {
-        const response = await fetch("/api/admin/stories")
-        if (response.ok) {
-          const data = await response.json()
-          setStories(data)
-        } else {
-          // If API fails, use mock data
-          setStories(mockStories)
-        }
-        setIsLoading(false)
-      } catch (error) {
-        console.error("Failed to fetch stories:", error)
-        setStories(mockStories)
-        setIsLoading(false)
-      }
-    }
-
     if (status === "authenticated") {
       fetchStories()
     }
-  }, [status, session, router])
+  }, [status, session, router, pagination.page])
+
+  const fetchStories = async () => {
+    try {
+      setIsLoading(true)
+      const response = await fetch(`/api/admin/stories?page=${pagination.page}`)
+
+      if (response.ok) {
+        const data = await response.json()
+        setStories(data)
+      } else {
+        toast.error("Failed to fetch stories")
+      }
+    } catch (error) {
+      console.error("Failed to fetch stories:", error)
+      toast.error("An error occurred while fetching stories")
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const filteredStories = stories.filter(
     (story) =>
@@ -107,7 +115,7 @@ export default function StoriesPage() {
 
   const handleCreateStory = async () => {
     try {
-      if (!formData.title || !formData.description) {
+      if (!formData.title || !formData.description || !formData.category) {
         toast.error("Please fill all required fields")
         return
       }
@@ -122,7 +130,7 @@ export default function StoriesPage() {
         const newStory = await response.json()
         setStories([newStory, ...stories])
         setIsCreateDialogOpen(false)
-        setFormData({ title: "", description: "", image: "" })
+        setFormData({ title: "", description: "", image: "", category: "" })
         toast.success("Story created successfully")
       } else {
         const error = await response.json()
@@ -136,7 +144,8 @@ export default function StoriesPage() {
 
   const handleEditStory = async () => {
     try {
-      if (!formData.title || !formData.description) {
+      if (!currentStory) return
+      if (!formData.title || !formData.description || !formData.category) {
         toast.error("Please fill all required fields")
         return
       }
@@ -149,13 +158,11 @@ export default function StoriesPage() {
 
       if (response.ok) {
         const updatedStory = await response.json()
-        const updatedStories = stories.map((story) =>
-          story.id === currentStory.id ? updatedStory : story,
-        )
+        const updatedStories = stories.map((story) => (story.id === currentStory.id ? updatedStory : story))
         setStories(updatedStories)
         setIsEditDialogOpen(false)
         setCurrentStory(null)
-        setFormData({ title: "", description: "", image: "" })
+        setFormData({ title: "", description: "", image: "", category: "" })
         toast.success("Story updated successfully")
       } else {
         const error = await response.json()
@@ -169,6 +176,7 @@ export default function StoriesPage() {
 
   const handleDeleteStory = async () => {
     try {
+      if (!currentStory) return
       const response = await fetch(`/api/admin/stories/${currentStory.id}`, {
         method: "DELETE",
       })
@@ -186,6 +194,18 @@ export default function StoriesPage() {
     } catch (error) {
       console.error("Failed to delete story:", error)
       toast.error("An error occurred while deleting the story")
+    }
+  }
+
+  const handlePreviousPage = () => {
+    if (pagination.page > 1) {
+      setPagination({ ...pagination, page: pagination.page - 1 })
+    }
+  }
+
+  const handleNextPage = () => {
+    if (pagination.page < pagination.totalPages) {
+      setPagination({ ...pagination, page: pagination.page + 1 })
     }
   }
 
@@ -211,14 +231,14 @@ export default function StoriesPage() {
                 Add Story
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px] h-[calc(120vh-100px)] overflow-y-auto">
+            <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
                 <DialogTitle>Create New Success Story</DialogTitle>
                 <DialogDescription>Add a new success story to showcase your work.</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="title">Title</Label>
+                  <Label htmlFor="title">Title *</Label>
                   <Input
                     id="title"
                     value={formData.title}
@@ -227,7 +247,25 @@ export default function StoriesPage() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="description">Description</Label>
+                  <Label htmlFor="category">Category *</Label>
+                  <Select
+                    value={formData.category}
+                    onValueChange={(value) => setFormData({ ...formData, category: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="description">Description *</Label>
                   <Textarea
                     id="description"
                     value={formData.description}
@@ -238,12 +276,13 @@ export default function StoriesPage() {
                 </div>
                 <div className="grid gap-2">
                 <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="TeamImageUploader" label="Profile Image"/>
-               
-                  {/* <Label>Image</Label>
-                  <UploadImage
-                    endpoint="imageUploader"
+                
+                  {/* <Label htmlFor="image">Image URL *</Label>
+                  <Input
+                    id="image"
                     value={formData.image}
-                    onChange={(url) => setFormData({ ...formData, image: url || "" })}
+                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                    placeholder="Enter image URL"
                   /> */}
                 </div>
               </div>
@@ -278,9 +317,9 @@ export default function StoriesPage() {
               <TableRow>
                 <TableHead>Image</TableHead>
                 <TableHead>Title</TableHead>
+                <TableHead>Category</TableHead>
                 <TableHead className="hidden md:table-cell">Description</TableHead>
                 <TableHead className="hidden md:table-cell">Created</TableHead>
-                <TableHead className="hidden md:table-cell">Updated</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -305,14 +344,12 @@ export default function StoriesPage() {
                       </div>
                     </TableCell>
                     <TableCell className="font-medium">{story.title}</TableCell>
+                    <TableCell>{story.category}</TableCell>
                     <TableCell className="hidden md:table-cell">
                       {story.description.length > 60 ? `${story.description.substring(0, 60)}...` : story.description}
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {format(new Date(story.createdAt), "MMM d, yyyy")}
-                    </TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {format(new Date(story.updatedAt), "MMM d, yyyy")}
                     </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
@@ -330,6 +367,7 @@ export default function StoriesPage() {
                                 title: story.title,
                                 description: story.description,
                                 image: story.image,
+                                category: story.category,
                               })
                               setIsEditDialogOpen(true)
                             }}
@@ -358,11 +396,16 @@ export default function StoriesPage() {
         </div>
 
         <div className="flex items-center justify-end space-x-2 py-4">
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" onClick={handlePreviousPage} disabled={pagination.page <= 1}>
             <ChevronLeft className="h-4 w-4" />
             Previous
           </Button>
-          <Button variant="outline" size="sm">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleNextPage}
+            disabled={pagination.page >= pagination.totalPages}
+          >
             Next
             <ChevronRight className="h-4 w-4" />
           </Button>
@@ -371,14 +414,14 @@ export default function StoriesPage() {
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-[600px] h-[calc(120vh-100px)] overflow-y-auto">
+        <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
             <DialogTitle>Edit Success Story</DialogTitle>
             <DialogDescription>Make changes to the success story.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="edit-title">Title</Label>
+              <Label htmlFor="edit-title">Title *</Label>
               <Input
                 id="edit-title"
                 value={formData.title}
@@ -386,7 +429,25 @@ export default function StoriesPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="edit-description">Description</Label>
+              <Label htmlFor="edit-category">Category *</Label>
+              <Select
+                value={formData.category}
+                onValueChange={(value) => setFormData({ ...formData, category: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-description">Description *</Label>
               <Textarea
                 id="edit-description"
                 value={formData.description}
@@ -395,14 +456,12 @@ export default function StoriesPage() {
               />
             </div>
             <div className="grid gap-2">
-            <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="TeamImageUploader" label="Profile Image"/>
-               
-              {/* <Label>Image</Label>
-              <UploadImage
-                endpoint="imageUploader"
+              <Label htmlFor="edit-image">Image URL *</Label>
+              <Input
+                id="edit-image"
                 value={formData.image}
-                onChange={(url) => setFormData({ ...formData, image: url || "" })}
-              /> */}
+                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+              />
             </div>
           </div>
           <DialogFooter>
@@ -436,3 +495,4 @@ export default function StoriesPage() {
     </AdminLayout>
   )
 }
+

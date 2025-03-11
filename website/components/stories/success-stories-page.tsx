@@ -23,66 +23,6 @@ type SuccessStory = {
   slug: string
 }
 
-// Sample data based on the images
-const successStories: SuccessStory[] = [
-  {
-    id: "1",
-    title: "Upgrading Victory Building Team's RFP Submission Package with a New RFP Template",
-    category: "Marketing",
-    imageUrl: "/placeholder.svg?height=600&width=800",
-    slug: "victory-building-rfp",
-  },
-  {
-    id: "2",
-    title: "GEM Electrical Contracting",
-    category: "Marketing",
-    imageUrl: "/placeholder.svg?height=600&width=800",
-    slug: "gem-electrical",
-  },
-  {
-    id: "3",
-    title: "J.R. Electrical Contractors",
-    category: "Marketing",
-    imageUrl: "/placeholder.svg?height=600&width=800",
-    slug: "jr-electrical",
-  },
-  {
-    id: "4",
-    title: "The Jon Smith Group",
-    category: "Marketing",
-    imageUrl: "/placeholder.svg?height=600&width=800",
-    slug: "jon-smith-group",
-  },
-  {
-    id: "5",
-    title: "Streamlining Operations for ABC Construction",
-    category: "Operations",
-    imageUrl: "/placeholder.svg?height=600&width=800",
-    slug: "abc-construction",
-  },
-  {
-    id: "6",
-    title: "Implementing Procore for XYZ Builders",
-    category: "Procore",
-    imageUrl: "/placeholder.svg?height=600&width=800",
-    slug: "xyz-builders",
-  },
-  {
-    id: "7",
-    title: "ERP Integration for Global Contractors",
-    category: "Software & ERP",
-    imageUrl: "/placeholder.svg?height=600&width=800",
-    slug: "global-contractors",
-  },
-  {
-    id: "8",
-    title: "Performance Bonus Structure for Elite Builders",
-    category: "Bonus Programs",
-    imageUrl: "/placeholder.svg?height=600&width=800",
-    slug: "elite-builders",
-  },
-]
-
 // All available categories
 const categories: Category[] = [
   "All",
@@ -96,17 +36,39 @@ const categories: Category[] = [
 
 export default function SuccessStoriesPage() {
   const [selectedCategory, setSelectedCategory] = useState<Category>("All")
-  const [filteredStories, setFilteredStories] = useState<SuccessStory[]>(successStories)
+  const [stories, setStories] = useState<SuccessStory[]>([])
+  const [filteredStories, setFilteredStories] = useState<SuccessStory[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [isLoaded, setIsLoaded] = useState(false)
+
+  // Fetch stories from API
+  useEffect(() => {
+    async function fetchStories() {
+      try {
+        const response = await fetch("/api/stories")
+        if (response.ok) {
+          const data = await response.json()
+          setStories(data)
+          setFilteredStories(data)
+        }
+      } catch (error) {
+        console.error("Error fetching stories:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchStories()
+  }, [])
 
   // Filter stories when category changes
   useEffect(() => {
     if (selectedCategory === "All") {
-      setFilteredStories(successStories)
+      setFilteredStories(stories)
     } else {
-      setFilteredStories(successStories.filter((story) => story.category === selectedCategory))
+      setFilteredStories(stories.filter((story) => story.category === selectedCategory))
     }
-  }, [selectedCategory])
+  }, [selectedCategory, stories])
 
   // Set loaded state after initial render for animations
   useEffect(() => {
@@ -180,68 +142,74 @@ export default function SuccessStoriesPage() {
       {/* Success Stories Grid */}
       <div className="bg-gray-100 py-16">
         <div className="container mx-auto px-4">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={selectedCategory}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-            >
-              {filteredStories.map((story) => (
-                <motion.div
-                  key={story.id}
-                  className="group relative overflow-hidden rounded-lg shadow-lg h-[400px]"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                  whileHover={{ y: -5 }}
-                >
-                  <Link href={`/success-stories/${story.id}`} className="block h-full">
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
+          {isLoading ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-600"></div>
+            </div>
+          ) : (
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={selectedCategory}
+                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+              >
+                {filteredStories.map((story) => (
+                  <motion.div
+                    key={story.id}
+                    className="group relative overflow-hidden rounded-lg shadow-lg h-[400px]"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5 }}
+                    whileHover={{ y: -5 }}
+                  >
+                    <Link href={`/success-stories/${story.slug}`} className="block h-full">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
 
-                    <Image
-                      src={story.imageUrl || "/placeholder.svg"}
-                      alt={story.title}
-                      fill
-                      className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-
-                    <div className="absolute top-4 left-4 z-20">
-                      <motion.span
-                        className="inline-block px-3 py-1 bg-red-600 text-white text-xs font-semibold rounded"
-                        whileHover={{ scale: 1.05 }}
-                      >
-                        {story.category}
-                      </motion.span>
-                    </div>
-
-                    <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
-                      <motion.h3
-                        className="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors duration-300"
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ delay: 0.2, duration: 0.5 }}
-                      >
-                        {story.title}
-                      </motion.h3>
-
-                      <motion.div
-                        className="w-0 h-0.5 bg-red-600 group-hover:w-full transition-all duration-300"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: "30%" }}
-                        viewport={{ once: true }}
+                      <Image
+                        src={story.imageUrl || "/placeholder.svg?height=600&width=800"}
+                        alt={story.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-110"
                       />
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
+
+                      <div className="absolute top-4 left-4 z-20">
+                        <motion.span
+                          className="inline-block px-3 py-1 bg-red-600 text-white text-xs font-semibold rounded"
+                          whileHover={{ scale: 1.05 }}
+                        >
+                          {story.category}
+                        </motion.span>
+                      </div>
+
+                      <div className="absolute bottom-0 left-0 right-0 p-6 z-20">
+                        <motion.h3
+                          className="text-xl font-bold text-white mb-2 group-hover:text-red-400 transition-colors duration-300"
+                          initial={{ y: 20, opacity: 0 }}
+                          animate={{ y: 0, opacity: 1 }}
+                          transition={{ delay: 0.2, duration: 0.5 }}
+                        >
+                          {story.title}
+                        </motion.h3>
+
+                        <motion.div
+                          className="w-0 h-0.5 bg-red-600 group-hover:w-full transition-all duration-300"
+                          initial={{ width: 0 }}
+                          whileInView={{ width: "30%" }}
+                          viewport={{ once: true }}
+                        />
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          )}
 
           {/* Empty state when no stories match the filter */}
-          {filteredStories.length === 0 && (
+          {!isLoading && filteredStories.length === 0 && (
             <motion.div
               className="text-center py-20"
               initial={{ opacity: 0 }}

@@ -3,11 +3,13 @@ import { getServerSession } from "next-auth/next"
 import { authOptions } from "@/lib/auth"
 import prisma from "@/lib/prisma"
 import { z } from "zod"
+import { slugify } from "@/lib/utils"
 
 const storySchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
   image: z.string().url("Invalid image URL").optional().or(z.literal("")),
+  category: z.string().min(1, "Category is required"),
 })
 
 // GET all stories
@@ -35,23 +37,23 @@ export async function GET() {
             email: true,
           },
         },
-        comments: {
-          select: {
-            id: true,
-            content: true,
-            createdAt: true,
-            author: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
       },
     })
 
-    return NextResponse.json(stories)
+    // Transform the data to match the frontend format
+    const formattedStories = stories.map((story) => ({
+      id: story.id,
+      title: story.title,
+      description: story.description,
+      image: story.image,
+      category: story.category.replace(/_/g, " ") as any,
+      slug: story.slug,
+      author: story.author,
+      createdAt: story.createdAt,
+      updatedAt: story.updatedAt,
+    }))
+
+    return NextResponse.json(formattedStories)
   } catch (error) {
     console.error("Error fetching stories:", error)
     return NextResponse.json({ message: "Internal server error" }, { status: 500 })
@@ -72,13 +74,34 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { title, description, image } = storySchema.parse(body)
+    const { title, description, image, category } = storySchema.parse(body)
+
+    const validatedImage = image || "";
+
+    // Generate a slug from the title
+    const slug = slugify(title)
+
+    // Check if slug already exists
+    const existingStory = await prisma.story.findUnique({
+      where: {
+        slug,
+      },
+    })
+
+    if (existingStory) {
+      return NextResponse.json({ message: "A story with this title already exists" }, { status: 409 })
+    }
+
+    // Format category for database
+    const formattedCategory = category.toUpperCase().replace(/\s+/g, "_")
 
     const story = await prisma.story.create({
       data: {
         title,
         description,
-        image,
+        image: validatedImage,
+        category: formattedCategory as any,
+        slug,
         author: {
           connect: {
             id: session.user.id,
@@ -87,7 +110,19 @@ export async function POST(req: Request) {
       },
     })
 
-    return NextResponse.json(story, { status: 201 })
+    // Transform the data to match the frontend format
+    const formattedStory = {
+      id: story.id,
+      title: story.title,
+      description: story.description,
+      image: story.image,
+      category: story.category.replace(/_/g, " ") as any,
+      slug: story.slug,
+      createdAt: story.createdAt,
+      updatedAt: story.updatedAt,
+    }
+
+    return NextResponse.json(formattedStory, { status: 201 })
   } catch (error) {
     console.error("Error creating story:", error)
     if (error instanceof z.ZodError) {

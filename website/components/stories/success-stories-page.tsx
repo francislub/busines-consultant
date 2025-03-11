@@ -198,7 +198,7 @@ export default function SuccessStoriesPage() {
                   transition={{ duration: 0.5 }}
                   whileHover={{ y: -5 }}
                 >
-                  <Link href={`/success-stories/${story.slug}`} className="block h-full">
+                  <Link href={`/success-stories/${story.id}`} className="block h-full">
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent z-10" />
 
                     <Image

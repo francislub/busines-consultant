@@ -10,7 +10,7 @@ import { format } from "date-fns"
 interface Article {
   id: string
   title: string
-  slug: string
+  // slug: string
   image: string
   category: string
   createdAt: string
@@ -69,7 +69,7 @@ export default function RelatedArticles({ currentArticleId, category }: RelatedA
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: index * 0.1 }}
         >
-          <Link href={`/articles/${article.slug}`} className="group block">
+          <Link href={`/articles/${article.id}`} className="group block">
             <div className="relative aspect-video rounded-lg overflow-hidden mb-4">
               <Image
                 src={article.image || "/placeholder.svg"}

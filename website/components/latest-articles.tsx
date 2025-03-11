@@ -23,7 +23,7 @@ export default function LatestArticles() {
   useEffect(() => {
     async function fetchArticles() {
       try {
-        const response = await fetch("/api/admin/articles")
+        const response = await fetch("/api/articles")
         const data = await response.json()
         setArticles(data)
       } catch (error) {

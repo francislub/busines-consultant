@@ -10,7 +10,8 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { toast } from "sonner";
+// import { toast } from "sonner";
+import { toast } from "react-hot-toast"
 
 interface CommentFormProps {
   articleId: string
@@ -18,7 +19,6 @@ interface CommentFormProps {
 
 export default function CommentForm({ articleId }: CommentFormProps) {
   const { data: session } = useSession()
-  const { toast } = toast()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     firstName: "",
@@ -54,16 +54,9 @@ export default function CommentForm({ articleId }: CommentFormProps) {
         comment: "",
       })
 
-      toast({
-        title: "Success",
-        description: "Your comment has been submitted successfully.",
-      })
+      toast.success("Your comment has been submitted successfully.")
     } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to submit comment. Please try again.",
-        variant: "destructive",
-      })
+      toast.error("Failed to submit comment. Please try again.")
     } finally {
       setIsSubmitting(false)
     }

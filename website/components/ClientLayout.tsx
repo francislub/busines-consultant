@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import MainHeader from "@/components/header";
 import Footer from "@/components/footer";
+import { SessionProvider } from "next-auth/react";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -11,7 +12,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   return (
     <>
       {!hideLayout && <MainHeader />}
-      <main>{children}</main>
+      <main><SessionProvider>{children}</SessionProvider></main>
       {!hideLayout && <Footer />}
     </>
   );

@@ -10,19 +10,9 @@ const articleSchema = z.object({
   image: z.string().url("Invalid image URL").or(z.literal("")).or(z.null()).optional(),
 })
 
-// GET all articles by the admin
+// GET BY ALL USERS
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
-
-    if (!session || !session.user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
-    }
-
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ message: "Forbidden" }, { status: 403 })
-    }
-
     const articles = await prisma.article.findMany({
       orderBy: {
         createdAt: "desc",

@@ -3,19 +3,10 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
-import { Pencil, Trash2, Search, ChevronLeft, ChevronRight, MoreHorizontal, MessageSquare } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useSession } from "next-auth/react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,46 +17,58 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import AdminLayout from "@/components/admin-layout"
-import { useSession } from "next-auth/react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
+import { Search, MoreHorizontal, Eye, Trash2, ChevronLeft, ChevronRight, RefreshCw, Filter } from "lucide-react"
+import AdminLayout from "@/components/admin-layout"
 import { toast } from "sonner"
 
-// Mock data for comments
-const mockComments = Array.from({ length: 15 }).map((_, i) => ({
-  id: `comment-${i + 1}`,
-  content: `This is comment ${i + 1}. It provides feedback or a question about the content.`,
-  author: {
-    id: `user-${i % 5 + 1}`,
-    name: `User ${i % 5 + 1}`,
-    email: `user${i % 5 + 1}@example.com`,
-  },
-  story: i % 2 === 0 ? {
-    id: `story-${i % 5 + 1}`,
-    title: `Success Story ${i % 5 + 1}`,
-  } : null,
-  article: i % 2 === 1 ? {
-    id: `article-${i % 5 + 1}`,
-    title: `Article ${i % 5 + 1}`,
-  } : null,
-  createdAt: new Date(Date.now() - Math.floor(Math.random() * 10000000000)),
-  updatedAt: new Date(Date.now() - Math.floor(Math.random() * 1000000000)),
-}))
+interface Comment {
+  id: string
+  content: string
+  firstName?: string
+  lastName?: string
+  email?: string
+  createdAt: string
+  author?: {
+    id: string
+    name: string
+    email: string
+  } | null
+  article?: {
+    id: string
+    title: string
+  } | null
+  story?: {
+    id: string
+    title: string
+  } | null
+}
+
+interface PaginationData {
+  total: number
+  pages: number
+  page: number
+  limit: number
+}
 
 export default function CommentsPage() {
   const router = useRouter()
   const { data: session, status } = useSession()
-  const [comments, setComments] = useState(mockComments)
+  const [comments, setComments] = useState<Comment[]>([])
+  const [pagination, setPagination] = useState<PaginationData>({
+    total: 0,
+    pages: 0,
+    page: 1,
+    limit: 10,
+  })
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [contentFilter, setContentFilter] = useState<string | null>(null)
+  const [selectedComment, setSelectedComment] = useState<Comment | null>(null)
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [currentComment, setCurrentComment] = useState<any>(null)
-  const [formData, setFormData] = useState({
-    content: "",
-  })
 
   useEffect(() => {
     // Check authentication and role
@@ -80,91 +83,63 @@ export default function CommentsPage() {
     }
 
     // Fetch comments
-    const fetchComments = async () => {
-      try {
-        const response = await fetch("/api/admin/comments")
-        if (response.ok) {
-          const data = await response.json()
-          setComments(data)
-        } else {
-          // If API fails, use mock data
-          setComments(mockComments)
-        }
-        setIsLoading(false)
-      } catch (error) {
-        console.error("Failed to fetch comments:", error)
-        setComments(mockComments)
-        setIsLoading(false)
-      }
-    }
-
     if (status === "authenticated") {
       fetchComments()
     }
-  }, [status, session, router])
+  }, [status, session, router, pagination.page, contentFilter])
 
-  const filteredComments = comments.filter(
-    (comment) =>
-      comment.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      comment.author.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      (comment.story?.title && comment.story.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
-      (comment.article?.title && comment.article.title.toLowerCase().includes(searchQuery.toLowerCase()))
-  )
-
-  const handleEditComment = async () => {
+  const fetchComments = async () => {
+    setIsLoading(true)
     try {
-      if (!formData.content) {
-        toast.error("Please fill the comment content")
-        return
+      let url = `/api/comments?page=${pagination.page}&limit=${pagination.limit}`
+      if (contentFilter) {
+        url += `&contentType=${contentFilter}`
       }
 
-      const response = await fetch(`/api/admin/comments/${currentComment.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      })
+      const response = await fetch(url)
+      const data = await response.json()
 
-      if (response.ok) {
-        const updatedComment = await response.json()
-        const updatedComments = comments.map((comment) =>
-          comment.id === currentComment.id ? { ...comment, ...updatedComment } : comment,
-        )
-        setComments(updatedComments)
-        setIsEditDialogOpen(false)
-        setCurrentComment(null)
-        setFormData({ content: "" })
-        toast.success("Comment updated successfully")
-      } else {
-        const error = await response.json()
-        toast.error(error.message || "Failed to update comment")
-      }
+      setComments(data.comments)
+      setPagination(data.pagination)
     } catch (error) {
-      console.error("Failed to update comment:", error)
-      toast.error("An error occurred while updating the comment")
+      console.error("Failed to fetch comments:", error)
+      toast.error("Failed to load comments")
+    } finally {
+      setIsLoading(false)
     }
   }
 
   const handleDeleteComment = async () => {
+    if (!selectedComment) return
+
     try {
-      const response = await fetch(`/api/admin/comments/${currentComment.id}`, {
+      const response = await fetch(`/api/comments/${selectedComment.id}`, {
         method: "DELETE",
       })
 
-      if (response.ok) {
-        const updatedComments = comments.filter((comment) => comment.id !== currentComment.id)
-        setComments(updatedComments)
-        setIsDeleteDialogOpen(false)
-        setCurrentComment(null)
-        toast.success("Comment deleted successfully")
-      } else {
-        const error = await response.json()
-        toast.error(error.message || "Failed to delete comment")
+      if (!response.ok) {
+        throw new Error("Failed to delete comment")
       }
+
+      // Remove the comment from the local state
+      setComments(comments.filter((comment) => comment.id !== selectedComment.id))
+      setIsDeleteDialogOpen(false)
+      setSelectedComment(null)
+      toast.success("Comment deleted successfully")
     } catch (error) {
-      console.error("Failed to delete comment:", error)
-      toast.error("An error occurred while deleting the comment")
+      console.error("Error deleting comment:", error)
+      toast.error("Failed to delete comment")
     }
   }
+
+  const filteredComments = comments.filter(
+    (comment) =>
+      comment.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (comment.author?.name && comment.author.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (comment.firstName && comment.firstName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (comment.lastName && comment.lastName.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      (comment.email && comment.email.toLowerCase().includes(searchQuery.toLowerCase())),
+  )
 
   if (status === "loading" || isLoading) {
     return (
@@ -181,9 +156,15 @@ export default function CommentsPage() {
       <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
         <div className="flex items-center justify-between">
           <h2 className="text-3xl font-bold tracking-tight">Comments</h2>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" className="h-9 gap-1" onClick={fetchComments}>
+              <RefreshCw className="h-4 w-4" />
+              <span className="hidden sm:inline">Refresh</span>
+            </Button>
+          </div>
         </div>
 
-        <div className="flex items-center">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="relative w-full max-w-sm">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
@@ -194,15 +175,29 @@ export default function CommentsPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="h-9 gap-1">
+                <Filter className="h-4 w-4" />
+                <span>{contentFilter ? `Type: ${contentFilter}` : "Filter by Type"}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setContentFilter(null)}>All Comments</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setContentFilter("article")}>Article Comments</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setContentFilter("story")}>Story Comments</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Content</TableHead>
                 <TableHead>Author</TableHead>
-                <TableHead>On</TableHead>
+                <TableHead className="hidden md:table-cell">Content</TableHead>
+                <TableHead className="hidden md:table-cell">On</TableHead>
                 <TableHead className="hidden md:table-cell">Date</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -211,21 +206,25 @@ export default function CommentsPage() {
               {filteredComments.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    No comments found.
+                    No comments found
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredComments.map((comment) => (
                   <TableRow key={comment.id}>
-                    <TableCell className="max-w-xs truncate">{comment.content}</TableCell>
-                    <TableCell>{comment.author.name}</TableCell>
-                    <TableCell>
-                      {comment.story ? (
-                        <Badge variant="outline" className="bg-blue-50">Story: {comment.story.title}</Badge>
-                      ) : comment.article ? (
-                        <Badge variant="outline" className="bg-green-50">Article: {comment.article.title}</Badge>
+                    <TableCell className="font-medium">
+                      {comment.author?.name || `${comment.firstName} ${comment.lastName || ""}`}
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {comment.content.length > 60 ? `${comment.content.substring(0, 60)}...` : comment.content}
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {comment.article ? (
+                        <Badge variant="outline">Article: {comment.article.title}</Badge>
+                      ) : comment.story ? (
+                        <Badge variant="outline">Story: {comment.story.title}</Badge>
                       ) : (
-                        <Badge variant="outline">Unknown</Badge>
+                        "Unknown"
                       )}
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
@@ -242,20 +241,17 @@ export default function CommentsPage() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuItem
                             onClick={() => {
-                              setCurrentComment(comment)
-                              setFormData({
-                                content: comment.content,
-                              })
-                              setIsEditDialogOpen(true)
+                              setSelectedComment(comment)
+                              setIsViewDialogOpen(true)
                             }}
                           >
-                            <Pencil className="mr-2 h-4 w-4" />
-                            Edit
+                            <Eye className="mr-2 h-4 w-4" />
+                            View Details
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-red-600"
                             onClick={() => {
-                              setCurrentComment(comment)
+                              setSelectedComment(comment)
                               setIsDeleteDialogOpen(true)
                             }}
                           >
@@ -272,44 +268,83 @@ export default function CommentsPage() {
           </Table>
         </div>
 
-        <div className="flex items-center justify-end space-x-2 py-4">
-          <Button variant="outline" size="sm">
-            <ChevronLeft className="h-4 w-4" />
-            Previous
-          </Button>
-          <Button variant="outline" size="sm">
-            Next
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+        <div className="flex items-center justify-between py-4">
+          <div className="text-sm text-muted-foreground">
+            Showing <span className="font-medium">{filteredComments.length}</span> of{" "}
+            <span className="font-medium">{pagination.total}</span> comments
+          </div>
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
+              disabled={pagination.page <= 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
+              disabled={pagination.page >= pagination.pages}
+            >
+              Next
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Edit Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
+      {/* View Comment Dialog */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>Edit Comment</DialogTitle>
-            <DialogDescription>Make changes to the comment content.</DialogDescription>
+            <DialogTitle>Comment Details</DialogTitle>
+            <DialogDescription>
+              Submitted on {selectedComment && format(new Date(selectedComment.createdAt), "MMMM d, yyyy 'at' h:mm a")}
+            </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="edit-content">Content</Label>
-              <Textarea
-                id="edit-content"
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                rows={5}
-              />
+
+          {selectedComment && (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-sm font-medium text-gray-500">Author Information</h3>
+                <div className="mt-2 space-y-2">
+                  <p className="text-sm">
+                    <span className="font-medium">Name:</span>{" "}
+                    {selectedComment.author?.name || `${selectedComment.firstName} ${selectedComment.lastName || ""}`}
+                  </p>
+                  <p className="text-sm">
+                    <span className="font-medium">Email:</span> {selectedComment.author?.email || selectedComment.email}
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium text-gray-500">Content Information</h3>
+                <div className="mt-2 space-y-2">
+                  {selectedComment.article && (
+                    <p className="text-sm">
+                      <span className="font-medium">Article:</span> {selectedComment.article.title}
+                    </p>
+                  )}
+                  {selectedComment.story && (
+                    <p className="text-sm">
+                      <span className="font-medium">Story:</span> {selectedComment.story.title}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-sm font-medium text-gray-500">Comment</h3>
+                <div className="mt-2 p-4 bg-gray-50 rounded-md">
+                  <p className="text-sm whitespace-pre-wrap">{selectedComment.content}</p>
+                </div>
+              </div>
             </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button className="bg-red-600 hover:bg-red-700" onClick={handleEditComment}>
-              Save Changes
-            </Button>
-          </DialogFooter>
+          )}
         </DialogContent>
       </Dialog>
 
@@ -333,3 +368,4 @@ export default function CommentsPage() {
     </AdminLayout>
   )
 }
+

@@ -1,190 +1,128 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { ArrowRight } from "lucide-react"
 
-type Category = "All" | "Find Work" | "Win Work" | "Perform Work" | "Business Operations" | "General" | "Media / Video"
-
-type Article = {
+interface Article {
   id: string
   title: string
-  category: Category
   image: string
-  slug: string
-  type?: "podcast" | "article"
+  category: string
+  excerpt?: string
+  createdAt: Date
 }
 
-const articles: Article[] = [
-  {
-    id: "1",
-    title: "Sales vs. Marketing: Key Differences Every Contractor Should Know",
-    category: "Find Work",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "sales-vs-marketing",
-    type: "podcast",
-  },
-  {
-    id: "2",
-    title: "Top 5 Essentials for Construction Marketing",
-    category: "Find Work",
-    image: "/placeholder.svg?height=400&width=600",
-    slug: "construction-marketing-essentials",
-  },
-  {
-    id: "3",
-    title: "Digital Advertising Basics for Contractors",
-    category: "Find Work",
-    image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2.PNG-hleowAVfHA1gBMESSLes48yVL7ruyK.png",
-    slug: "digital-advertising-basics",
-  },
-]
-
-const categories: Category[] = [
-  "All",
-  "Find Work",
-  "Win Work",
-  "Perform Work",
-  "Business Operations",
-  "General",
-  "Media / Video",
-]
-
-export default function ArticlesPage() {
-  const [selectedCategory, setSelectedCategory] = useState<Category>("Find Work")
+export default function LatestArticles() {
+  const [articles, setArticles] = useState<Article[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [hoveredArticle, setHoveredArticle] = useState<string | null>(null)
 
-  const filteredArticles =
-    selectedCategory === "All" ? articles : articles.filter((article) => article.category === selectedCategory)
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        const response = await fetch("/api/articles")
+        const data = await response.json()
+        setArticles(data)
+      } catch (error) {
+        console.error("Error fetching articles:", error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchArticles()
+  }, [])
+
+  if (isLoading) {
+    return (
+      <section className="w-full bg-white py-20 px-4 md:px-8 lg:px-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="animate-pulse">
+                <div className="rounded-lg bg-zinc-800 h-48 mb-6"></div>
+                <div className="h-6 bg-zinc-800 rounded w-3/4 mb-4"></div>
+                <div className="h-4 bg-zinc-800 rounded w-1/4"></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Article Categories Dropdown */}
-      <div className="bg-red-600">
-        <div className="container mx-auto px-4 py-4">
-          <button className="text-white font-medium flex items-center gap-2">
-            Article Categories
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="container mx-auto px-4 py-16">
-        {/* Page Title */}
-        <motion.h1
-          className="text-5xl font-bold text-white mb-12 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          Find Work
-        </motion.h1>
-
-        {/* Category Navigation */}
+    <section className="w-full bg-white py-20 px-4 md:px-8 lg:px-12">
+      <div className="max-w-7xl mx-auto">
         <motion.div
-          className="flex flex-wrap justify-center gap-4 mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          viewport={{ once: true }}
         >
-          {categories.map((category) => (
-            <motion.button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                selectedCategory === category ? "bg-red-600 text-white" : "text-white hover:text-red-500"
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              {category}
-            </motion.button>
-          ))}
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-black mb-4">Our Latest Articles</h2>
+          <p className="text-xl text-zinc-400 max-w-3xl mx-auto">
+            Thought leadership and industry insights from our construction experts
+          </p>
         </motion.div>
 
-        {/* Articles Grid */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedCategory}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            {filteredArticles.map((article, index) => (
-              <motion.div
-                key={article.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                onHoverStart={() => setHoveredArticle(article.id)}
-                onHoverEnd={() => setHoveredArticle(null)}
-                className="group"
-              >
-                <Link href={`/articles/${article.slug}`}>
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
-                    {article.type === "podcast" && (
-                      <div className="absolute top-4 left-4 z-20 bg-white px-3 py-1 rounded-full">
-                        <Image
-                          src="/placeholder.svg?height=30&width=100"
-                          alt="Hot Takes Podcast"
-                          width={100}
-                          height={30}
-                          className="h-6 w-auto"
-                        />
-                      </div>
-                    )}
-
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {articles.map((article, index) => (
+            <motion.div
+              key={article.id}
+              className="group"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              onHoverStart={() => setHoveredArticle(article.id)}
+              onHoverEnd={() => setHoveredArticle(null)}
+            >
+              <Link href={`/articles/${article.id}`} className="block">
+                <div className="relative overflow-hidden rounded-lg mb-6">
+                  <div className="aspect-w-16 aspect-h-9 bg-zinc-800">
                     <Image
                       src={article.image || "/placeholder.svg"}
                       alt={article.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      width={600}
+                      height={338}
+                      className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
                     />
-
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-60 transition-opacity duration-300 group-hover:opacity-80" />
                   </div>
-
-                  <div className="mt-4 space-y-2">
-                    <h2 className="text-xl font-bold text-white group-hover:text-red-500 transition-colors duration-300">
-                      {article.title}
-                    </h2>
-
-                    <motion.div
-                      className="inline-flex items-center text-white/80 group-hover:text-red-500 transition-colors duration-300"
-                      initial={{ x: 0 }}
-                      animate={{ x: hoveredArticle === article.id ? 5 : 0 }}
-                    >
-                      Read More
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </motion.div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-80"></div>
+                  <div className="absolute top-4 left-4 bg-red-600 text-black text-xs font-bold uppercase tracking-wider py-1 px-2 rounded">
+                    {article.category}
                   </div>
-                </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        </AnimatePresence>
+                </div>
 
-        {/* Empty State */}
-        {filteredArticles.length === 0 && (
-          <motion.div
-            className="text-center py-20"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <h3 className="text-2xl font-semibold text-white">No articles found</h3>
-            <p className="text-white/60 mt-2">Try selecting a different category</p>
-          </motion.div>
-        )}
+                <h3 className="text-xl md:text-2xl font-bold text-black mb-4 transition-colors group-hover:text-red-500">
+                  {article.title}
+                </h3>
+
+                {article.excerpt && <p className="text-zinc-400 mb-4 line-clamp-2">{article.excerpt}</p>}
+
+                <div className="flex items-center">
+                  <span className="text-zinc-400 mr-2">Read More</span>
+                  <motion.div
+                    animate={{
+                      x: hoveredArticle === article.id ? 5 : 0,
+                      color: hoveredArticle === article.id ? "#e31b23" : "#a1a1aa",
+                    }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ArrowRight className="w-5 h-5" />
+                  </motion.div>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   )
 }
 

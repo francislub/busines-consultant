@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
@@ -10,8 +10,8 @@ const articleSchema = z.object({
   image: z.string().url("Invalid image URL").or(z.literal("")).or(z.null()).optional(),
 });
 
-// GET a specific article
-export async function GET(req: Request, context: { params: { id: string } }) {
+// ✅ Corrected GET handler
+export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -20,30 +20,10 @@ export async function GET(req: Request, context: { params: { id: string } }) {
     }
 
     const article = await prisma.article.findUnique({
-      where: {
-        id: context.params.id,
-      },
+      where: { id: params.id },
       include: {
-        author: {
-          select: {
-            id: true,
-            name: true,
-            email: true,
-          },
-        },
-        comments: {
-          select: {
-            id: true,
-            content: true,
-            createdAt: true,
-            author: {
-              select: {
-                id: true,
-                name: true,
-              },
-            },
-          },
-        },
+        author: { select: { id: true, name: true, email: true } },
+        comments: { select: { id: true, content: true, createdAt: true, author: { select: { id: true, name: true } } } },
       },
     });
 
@@ -58,8 +38,8 @@ export async function GET(req: Request, context: { params: { id: string } }) {
   }
 }
 
-// PUT (update) an article
-export async function PUT(req: Request, context: { params: { id: string } }) {
+// ✅ Corrected PUT handler
+export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -74,27 +54,17 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
     const body = await req.json();
     const { title, description, image } = articleSchema.parse(body);
 
-    // Check if article exists
     const existingArticle = await prisma.article.findUnique({
-      where: {
-        id: context.params.id,
-      },
+      where: { id: params.id },
     });
 
     if (!existingArticle) {
       return NextResponse.json({ message: "Article not found" }, { status: 404 });
     }
 
-    // Update article
     const updatedArticle = await prisma.article.update({
-      where: {
-        id: context.params.id,
-      },
-      data: {
-        ...(title && { title }),
-        ...(description && { description }),
-        ...(image && { image }),
-      },
+      where: { id: params.id },
+      data: { ...(title && { title }), ...(description && { description }), ...(image && { image }) },
     });
 
     return NextResponse.json(updatedArticle);
@@ -107,8 +77,8 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
   }
 }
 
-// DELETE an article
-export async function DELETE(req: Request, context: { params: { id: string } }) {
+// ✅ Corrected DELETE handler
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -120,30 +90,16 @@ export async function DELETE(req: Request, context: { params: { id: string } }) 
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });
     }
 
-    // Check if article exists
     const existingArticle = await prisma.article.findUnique({
-      where: {
-        id: context.params.id,
-      },
+      where: { id: params.id },
     });
 
     if (!existingArticle) {
       return NextResponse.json({ message: "Article not found" }, { status: 404 });
     }
 
-    // Delete related comments first
-    await prisma.comment.deleteMany({
-      where: {
-        articleId: context.params.id,
-      },
-    });
-
-    // Delete article
-    await prisma.article.delete({
-      where: {
-        id: context.params.id,
-      },
-    });
+    await prisma.comment.deleteMany({ where: { articleId: params.id } });
+    await prisma.article.delete({ where: { id: params.id } });
 
     return NextResponse.json({ message: "Article deleted successfully" }, { status: 200 });
   } catch (error) {

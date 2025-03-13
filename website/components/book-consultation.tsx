@@ -25,7 +25,7 @@ export default function BookConsultation() {
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('https://hebbkx1anhila5yf.public.blob.vercel-storage.com/book.PNG-NcKqJslfIQ0Vb4nFHj7Za3UP13TT8D.png')`,
+          backgroundImage: `url('/images/one.webp')`,
         }}
       >
         <div className="absolute inset-0 bg-black/70"></div>

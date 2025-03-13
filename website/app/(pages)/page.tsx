@@ -14,7 +14,7 @@ export default function Home() {
     <div>
       <Hero/>
       <WhatWeDo/>
-      <HeroBanner />
+      {/* <HeroBanner /> */}
       <BusinessCTA />
       {/* <PhotoGallery /> */}
       <SuccessStories />

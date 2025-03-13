@@ -5,6 +5,7 @@ import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowRight, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link" // Import Link from Next.js
 
 interface Service {
   id: number
@@ -25,57 +26,59 @@ export default function WhatWeDo() {
   const services: Service[] = [
     {
       id: 1,
-      title: "Operations and Performance",
+      title: "Entrepreneurial Skills",
       description: "Streamline your operations and boost performance",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/wedo.PNG-EUDfOtUuuPeG5BSufr7BkdepxWDorw.png",
+      image: "/images/one.webp",
       content: {
-        title: "Operations Excellence",
+        title: "Business Skills Development",
         description:
-          "Our team of experts will help you optimize your operations, implement best practices, and achieve peak performance.",
+          "Our experts will guide you in refining your entrepreneurial skills, streamlining your business operations, and optimizing your team's performance. We focus on empowering entrepreneurs to scale efficiently.",
         buttonText: "Learn More",
-        buttonLink: "/services/operations",
+        buttonLink: "/service/operations",
       },
     },
     {
       id: 2,
-      title: "Growth and Expansion",
+      title: "Business Management",
       description: "Scale your business strategically",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/wedo.PNG-EUDfOtUuuPeG5BSufr7BkdepxWDorw.png",
+      image: "/images/three.jpg",
       content: {
-        title: "Strategic Growth",
+        title: "Strategic Business Management",
         description:
-          "Develop and execute growth strategies that align with your business objectives and market opportunities.",
+          "Our consulting services help you create and implement growth strategies tailored to your unique business objectives. We help you make informed decisions and capitalize on emerging market opportunities to grow your business efficiently.",
         buttonText: "Learn More",
-        buttonLink: "/services/growth",
+        buttonLink: "/service/growth",
       },
     },
     {
       id: 3,
-      title: "Procore®",
+      title: "Monitoring and Evaluation®",
       description:
-        "Could you benefit from the advice of a Procore expert? Our experts provide a variety of Procore services, including evaluations & audits, implementation & integration services, expanded use, and admin & support services.",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/wedo.PNG-EUDfOtUuuPeG5BSufr7BkdepxWDorw.png",
+        "Maximize your investments with expert evaluations, audits, and strategic guidance.",
+      image: "/images/one.webp",
       content: {
-        title: "Procore® Expertise",
-        description: "Get the most out of your Procore investment with our expert consulting services.",
+        title: "Performance Monitoring & Evaluation",
+        description:
+          "We offer comprehensive monitoring and evaluation services to assess your business processes, ensuring optimal performance. Our services include evaluations, audits, and custom-tailored support strategies.",
         buttonText: "Learn More",
-        buttonLink: "/services/procore",
+        buttonLink: "/service/procore",
       },
     },
     {
       id: 4,
-      title: "Fractional Services",
+      title: "Trainer Development",
       description: "Expert support when you need it",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/wedo.PNG-EUDfOtUuuPeG5BSufr7BkdepxWDorw.png",
+      image: "/images/three.jpg",
       content: {
-        title: "Flexible Support",
+        title: "Professional Trainer Development",
         description:
-          "Access experienced professionals on a part-time or project basis to fill critical roles and drive results.",
+          "Gain access to experienced trainers who will mentor and develop your team, ensuring the transfer of critical skills for growth. We also offer part-time or project-based professionals to support business initiatives.",
         buttonText: "Learn More",
-        buttonLink: "/services/fractional",
+        buttonLink: "/service/fractional",
       },
     },
-  ]
+  ];
+  
 
   return (
     <section className="bg-black py-20 px-4 md:px-8 lg:px-12">
@@ -125,6 +128,7 @@ export default function WhatWeDo() {
                 </motion.h3>
 
                 {/* Hover Content */}
+                <Link href={service.content.buttonLink}>
                 <AnimatePresence>
                   {hoveredService === service.id && service.content && (
                     <motion.div
@@ -139,13 +143,17 @@ export default function WhatWeDo() {
                         <p className="text-zinc-300 mb-6">{service.content.description}</p>
                       </div>
 
-                      <Button variant="default" className="bg-red-600 hover:bg-red-700 text-white w-full">
-                        {service.content.buttonText}
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
+                      {/* Button with Link */}
+                      {/* <Link href={service.content.buttonLink}> */}
+                          <Button variant="default" className="bg-red-600 hover:bg-red-700 text-white w-full">
+                            {service.content.buttonText}
+                            <ArrowRight className="ml-2 h-4 w-4" />
+                          </Button>
+                      {/* </Link> */}
                     </motion.div>
                   )}
                 </AnimatePresence>
+                </Link>
               </div>
 
               {/* Service Icon */}

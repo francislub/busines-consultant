@@ -1,27 +1,27 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/lib/auth"
-import prisma from "@/lib/prisma"
-import { z } from "zod"
+import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/lib/auth";
+import prisma from "@/lib/prisma";
+import { z } from "zod";
 
 const articleSchema = z.object({
   title: z.string().min(1, "Title is required").optional(),
   description: z.string().min(1, "Description is required").optional(),
   image: z.string().url("Invalid image URL").or(z.literal("")).or(z.null()).optional(),
-})
+});
 
 // GET a specific article
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(req: Request, context: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
     const article = await prisma.article.findUnique({
       where: {
-        id: params.id,
+        id: context.params.id,
       },
       include: {
         author: {
@@ -45,21 +45,21 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
           },
         },
       },
-    })
+    });
 
     if (!article) {
-      return NextResponse.json({ message: "Article not founds" }, { status: 404 })
+      return NextResponse.json({ message: "Article not found" }, { status: 404 });
     }
 
-    return NextResponse.json(article)
+    return NextResponse.json(article);
   } catch (error) {
-    console.error("Error fetching article:", error)
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    console.error("Error fetching article:", error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
 
 // PUT (update) an article
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, context: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -74,17 +74,27 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     const body = await req.json();
     const { title, description, image } = articleSchema.parse(body);
 
+    // Check if article exists
     const existingArticle = await prisma.article.findUnique({
-      where: { id: params.id },
+      where: {
+        id: context.params.id,
+      },
     });
 
     if (!existingArticle) {
       return NextResponse.json({ message: "Article not found" }, { status: 404 });
     }
 
+    // Update article
     const updatedArticle = await prisma.article.update({
-      where: { id: params.id },
-      data: { ...(title && { title }), ...(description && { description }), ...(image && { image }) },
+      where: {
+        id: context.params.id,
+      },
+      data: {
+        ...(title && { title }),
+        ...(description && { description }),
+        ...(image && { image }),
+      },
     });
 
     return NextResponse.json(updatedArticle);
@@ -97,9 +107,8 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-
 // DELETE an article
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, context: { params: { id: string } }) {
   try {
     const session = await getServerSession(authOptions);
 
@@ -111,16 +120,30 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
       return NextResponse.json({ message: "Forbidden" }, { status: 403 });
     }
 
+    // Check if article exists
     const existingArticle = await prisma.article.findUnique({
-      where: { id: params.id },
+      where: {
+        id: context.params.id,
+      },
     });
 
     if (!existingArticle) {
       return NextResponse.json({ message: "Article not found" }, { status: 404 });
     }
 
-    await prisma.comment.deleteMany({ where: { articleId: params.id } });
-    await prisma.article.delete({ where: { id: params.id } });
+    // Delete related comments first
+    await prisma.comment.deleteMany({
+      where: {
+        articleId: context.params.id,
+      },
+    });
+
+    // Delete article
+    await prisma.article.delete({
+      where: {
+        id: context.params.id,
+      },
+    });
 
     return NextResponse.json({ message: "Article deleted successfully" }, { status: 200 });
   } catch (error) {
@@ -128,4 +151,3 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
-

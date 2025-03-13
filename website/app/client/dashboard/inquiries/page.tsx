@@ -36,7 +36,7 @@ const mockInquiries = Array.from({ length: 8 }).map((_, i) => ({
 
 export default function InquiriesPage() {
   const router = useRouter()
-  const { data, status } = useSession();
+  const { status } = useSession();
   const [inquiries, setInquiries] = useState(mockInquiries)
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")

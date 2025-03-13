@@ -32,7 +32,7 @@ const mockConsultations = Array.from({ length: 5 }).map((_, i) => ({
 
 export default function ConsultationsPage() {
   const router = useRouter()
-  const { data, status } = useSession();
+  const { status } = useSession();
   const [consultations, setConsultations] = useState(mockConsultations)
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")

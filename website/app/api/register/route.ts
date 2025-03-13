@@ -68,7 +68,7 @@ export async function POST(req: Request) {
     console.log("User created successfully:", newUser.id);
 
     // Return user without password
-    const { password: _, ...userWithoutPassword } = newUser;
+    const { password, ...userWithoutPassword } = newUser;
 
     return NextResponse.json(
       { user: userWithoutPassword, message: "User registered successfully" },

@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label"
 import type React from "react"
 
 import { useState } from "react"
-import { useSession } from "next-auth/react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"

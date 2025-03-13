@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { PrismaClient } from '@prisma/client'
+
 const prisma = new PrismaClient()
 
 const contactSchema = z.object({
@@ -44,7 +45,11 @@ export async function GET(req: Request) {
     const limit = Number.parseInt(searchParams.get("limit") || "10")
     const skip = (page - 1) * limit
 
-    const where = status ? { status: status as any } : {}
+    // Define a valid status type (example: "active", "inactive")
+    const validStatuses: string[] = ["active", "inactive"]
+
+    // Only add status filter if it's valid
+    const where = status && validStatuses.includes(status) ? { status } : {}
 
     const [contacts, total] = await Promise.all([
       prisma.contact.findMany({
@@ -70,4 +75,3 @@ export async function GET(req: Request) {
     return NextResponse.json({ message: "Internal server error" }, { status: 500 })
   }
 }
-

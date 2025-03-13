@@ -12,6 +12,25 @@ const storySchema = z.object({
   category: z.string().min(1, "Category is required").optional(),
 })
 
+// Type for formatted story response
+interface StoryResponse {
+  id: string
+  title: string
+  description: string
+  image: string | null
+  category: string
+  slug: string
+  author: { id: string; name: string; email: string }
+  comments: Array<{
+    id: string
+    content: string
+    createdAt: string
+    author: { id: string; name: string }
+  }>
+  createdAt: string
+  updatedAt: string
+}
+
 // GET a specific story
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
@@ -54,12 +73,12 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
     }
 
     // Transform the data to match the frontend format
-    const formattedStory = {
+    const formattedStory: StoryResponse = {
       id: story.id,
       title: story.title,
       description: story.description,
       image: story.image,
-      category: story.category.replace(/_/g, " ") as any,
+      category: story.category.replace(/_/g, " "),
       slug: story.slug,
       author: story.author,
       comments: story.comments,
@@ -102,7 +121,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     }
 
     // Prepare update data
-    const updateData: any = {}
+    const updateData: Record<string, string | undefined> = {}
 
     if (title) {
       updateData.title = title
@@ -135,7 +154,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     }
 
     if (category) {
-      updateData.category = category.toUpperCase().replace(/\s+/g, "_") as any
+      updateData.category = category.toUpperCase().replace(/\s+/g, "_")
     }
 
     // Update story
@@ -147,12 +166,12 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     })
 
     // Transform the data to match the frontend format
-    const formattedStory = {
+    const formattedStory: StoryResponse = {
       id: updatedStory.id,
       title: updatedStory.title,
       description: updatedStory.description,
       image: updatedStory.image,
-      category: updatedStory.category.replace(/_/g, " ") as any,
+      category: updatedStory.category.replace(/_/g, " "),
       slug: updatedStory.slug,
       createdAt: updatedStory.createdAt,
       updatedAt: updatedStory.updatedAt,
@@ -212,4 +231,3 @@ export async function DELETE(req: Request, { params }: { params: { id: string } 
     return NextResponse.json({ message: "Internal server error" }, { status: 500 })
   }
 }
-

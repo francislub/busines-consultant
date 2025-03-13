@@ -5,6 +5,20 @@ import prisma from "@/lib/prisma"
 import { z } from "zod"
 import { slugify } from "@/lib/utils"
 
+// Define types for StoryResponse to avoid using `any`
+interface StoryResponse {
+  id: string
+  title: string
+  description: string
+  image: string | null
+  category: string
+  slug: string
+  author: { id: string; name: string; email: string }
+  createdAt: string
+  updatedAt: string
+}
+
+// Define the schema for validating the input data
 const storySchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
@@ -40,13 +54,13 @@ export async function GET() {
       },
     })
 
-    // Transform the data to match the frontend format
-    const formattedStories = stories.map((story) => ({
+    // Format the stories into the required shape
+    const formattedStories: StoryResponse[] = stories.map((story) => ({
       id: story.id,
       title: story.title,
       description: story.description,
       image: story.image,
-      category: story.category.replace(/_/g, " ") as any,
+      category: story.category.replace(/_/g, " "), // Convert to a readable format
       slug: story.slug,
       author: story.author,
       createdAt: story.createdAt,
@@ -76,12 +90,12 @@ export async function POST(req: Request) {
     const body = await req.json()
     const { title, description, image, category } = storySchema.parse(body)
 
-    const validatedImage = image || "";
+    const validatedImage = image || ""
 
     // Generate a slug from the title
     const slug = slugify(title)
 
-    // Check if slug already exists
+    // Check if a story with the same slug exists
     const existingStory = await prisma.story.findUnique({
       where: {
         slug,
@@ -92,15 +106,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "A story with this title already exists" }, { status: 409 })
     }
 
-    // Format category for database
-    const formattedCategory = category.toUpperCase().replace(/\s+/g, "_")
+    // Format the category to match the format stored in the database (uppercase with underscores)
+    const formattedCategory: string = category.toUpperCase().replace(/\s+/g, "_")
 
     const story = await prisma.story.create({
       data: {
         title,
         description,
         image: validatedImage,
-        category: formattedCategory as any,
+        category: formattedCategory, // Correct type as string
         slug,
         author: {
           connect: {
@@ -110,13 +124,13 @@ export async function POST(req: Request) {
       },
     })
 
-    // Transform the data to match the frontend format
-    const formattedStory = {
+    // Format the newly created story into the required shape
+    const formattedStory: StoryResponse = {
       id: story.id,
       title: story.title,
       description: story.description,
       image: story.image,
-      category: story.category.replace(/_/g, " ") as any,
+      category: story.category.replace(/_/g, " "), // Convert to readable format
       slug: story.slug,
       createdAt: story.createdAt,
       updatedAt: story.updatedAt,
@@ -131,4 +145,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: "Internal server error" }, { status: 500 })
   }
 }
-

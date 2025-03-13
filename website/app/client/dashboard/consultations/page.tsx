@@ -20,6 +20,13 @@ import ClientLayout from "@/components/client-layout"
 import { useSession } from "next-auth/react"
 import { ConsultationForm } from "@/components/consultation-form"
 
+// Define the type for the consultation data
+interface ConsultationData {
+  subject: string;
+  description: string;
+  date: string;
+}
+
 // Mock data for consultations
 const mockConsultations = Array.from({ length: 5 }).map((_, i) => ({
   id: `consultation-${i + 1}`,
@@ -74,7 +81,7 @@ export default function ConsultationsPage() {
       consultation.description.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
-  const handleCreateConsultation = async (data: any) => {
+  const handleCreateConsultation = async (data: ConsultationData) => {
     setIsSubmitting(true)
     try {
       // In a real app, you would send data to your API

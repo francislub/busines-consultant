@@ -30,8 +30,28 @@ export async function POST(req: Request) {
     // Check if user is authenticated
     const session = await getServerSession(authOptions)
     
-    // Create comment data
-    const commentData: any = {
+    // Create comment data with a more specific type
+    const commentData: {
+      content: string
+      author?: {
+        connect: {
+          id: string
+        }
+      }
+      firstName?: string
+      lastName?: string
+      email?: string
+      article?: {
+        connect: {
+          id: string
+        }
+      }
+      story?: {
+        connect: {
+          id: string
+        }
+      }
+    } = {
       content: comment,
     }
     
@@ -89,8 +109,8 @@ export async function GET(req: Request) {
     const limit = parseInt(searchParams.get("limit") || "10")
     const skip = (page - 1) * limit
 
-    // Build the where clause based on filters
-    const where: any = {}
+    // Build the where clause based on filters, properly typed
+    const where: { articleId?: string, storyId?: string } = {}
     
     if (articleId) {
       where.articleId = articleId

@@ -1,6 +1,32 @@
 import { NextResponse } from "next/server"
 import prisma from "@/lib/prisma"
 
+// Define the Story and Comment types for better type safety
+interface Author {
+  id: number
+  name: string
+}
+
+interface Comment {
+  id: number
+  content: string
+  author: Author
+  createdAt: string
+}
+
+interface Story {
+  id: number
+  title: string
+  description: string
+  category: string
+  imageUrl: string
+  slug: string
+  author: Author
+  comments: Comment[]
+  createdAt: string
+  updatedAt: string
+}
+
 // GET a specific story by slug
 export async function GET(req: Request, { params }: { params: { slug: string } }) {
   try {
@@ -36,11 +62,11 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
     }
 
     // Transform the data to match the frontend format
-    const formattedStory = {
+    const formattedStory: Story = {
       id: story.id,
       title: story.title,
       description: story.description,
-      category: story.category.replace(/_/g, " ") as any,
+      category: story.category.replace(/_/g, " "), // No need for `any`
       imageUrl: story.image,
       slug: story.slug,
       author: story.author,
@@ -55,4 +81,3 @@ export async function GET(req: Request, { params }: { params: { slug: string } }
     return NextResponse.json({ message: "Internal server error" }, { status: 500 })
   }
 }
-

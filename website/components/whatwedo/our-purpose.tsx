@@ -80,7 +80,7 @@ export default function OurPurpose() {
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                Mancha company's mission is to support businesses in achieving their maximum
+                Mancha companys mission is to support businesses in achieving their maximum
                 potential. We leverage deep industry knowledge, practical experience, and a dedicated
                 team to provide tailored consulting solutions that enhance business efficiency, optimize
                 operations, and improve overall profitability. Whether you’re a startup or an established

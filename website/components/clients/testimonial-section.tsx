@@ -58,7 +58,7 @@ export default function TestimonialSection() {
                 <Quote className="absolute top-6 left-6 w-8 h-8 text-red-500 opacity-50" />
 
                 <div className="pl-12">
-                  <p className="text-gray-300 italic mb-6">"{testimonial.quote}"</p>
+                  <p className="text-gray-300 italic mb-6">{testimonial.quote}</p>
 
                   <div>
                     <p className="font-semibold">{testimonial.author}</p>

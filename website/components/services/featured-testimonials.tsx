@@ -23,7 +23,7 @@ export default function FeaturedTestimonials() {
             What Our Clients Say
           </h2>
           <p className="text-lg text-slate-600">
-            Don't just take our word for it. Here's what our clients have to say about our services.
+            Don&apos;t just take our word for it. Here&apos;s what our clients have to say about our services.
           </p>
         </div>
         
@@ -69,7 +69,7 @@ export default function FeaturedTestimonials() {
               </div>
               
               <blockquote className="text-slate-700 italic mb-4">
-                "{testimonial.quote}"
+                {testimonial.quote}
               </blockquote>
             </motion.div>
           ))}

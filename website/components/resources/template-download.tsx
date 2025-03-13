@@ -52,6 +52,7 @@ export default function TemplateDownloads() {
       // In a real application, you would handle the actual file download here
       toast.success("Download started!")
     } catch (error) {
+      console.error("Date parsing error:", error); 
       toast.error("Download failed. Please try again.")
     }
     setDownloading(null)

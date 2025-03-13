@@ -8,6 +8,7 @@ import { LayoutDashboard, MessageSquare, Calendar, MessageCircle, LogOut, Menu, 
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Logo } from "@/components/ui/logo"
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession()
@@ -26,8 +27,8 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
       {/* Desktop Sidebar */}
       <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
         <div className="flex flex-col flex-grow bg-white pt-5 pb-4 overflow-y-auto border-r">
-          <div className="flex items-center flex-shrink-0 px-4">
-            <h1 className="text-xl font-bold text-red-600">Ascent Client</h1>
+        <div className="flex items-center flex-shrink-0 px-4">
+          <Logo variant="horizontal" size="md" darkMode={true} className="py-2" />
           </div>
           <div className="mt-5 flex-1 flex flex-col">
             <nav className="flex-1 px-2 space-y-1">
@@ -91,7 +92,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
         <SheetContent side="left" className="w-72 p-0">
           <div className="flex flex-col h-full">
             <div className="flex items-center justify-between p-4 border-b">
-              <h1 className="text-xl font-bold text-red-600">Ascent Client</h1>
+              <h1 className="text-xl font-bold text-red-600">Mancha Client</h1>
               <Button variant="ghost" size="icon" onClick={() => setIsMobileMenuOpen(false)}>
                 <X className="h-5 w-5" />
                 <span className="sr-only">Close menu</span>

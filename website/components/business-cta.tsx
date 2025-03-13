@@ -88,12 +88,12 @@ export default function BusinessCTA() {
               className="space-y-6"
             >
               <p className="text-lg">
-                We've helped hundreds of construction companies solve their most persistent problems, and we can help
-                you too. If you'd like to talk with an expert about what you want for{" "}
+                We&apos;ve helped hundreds of construction companies solve their most persistent problems, and we can help
+                you too. If you&apos;d like to talk with an expert about what you want for{" "}
                 <span className="font-bold">YOUR</span> business, take action{" "}
                 <span className="text-orange-500 font-bold">today</span> and schedule a time to talk with us.
               </p>
-              <p className="text-lg">We're here to help you reach your goals.</p>
+              <p className="text-lg">We&apos;re here to help you reach your goals.</p>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}

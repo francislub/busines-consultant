@@ -23,7 +23,7 @@ export default function ComparisonSection() {
               We are often asked about the difference between <span className="text-red-500">Consulting</span> and{" "}
               <span className="text-red-500">Business Coaching</span>. These terms are often interchanged, and people
               frequently ask for one when they need the other. As a provider of{" "}
-              <span className="text-red-500">Business Consulting</span> services (not coaching), here's how we define
+              <span className="text-red-500">Business Consulting</span> services (not coaching), here&apos;s how we define
               the two terms.
             </p>
           </motion.div>
@@ -46,7 +46,7 @@ export default function ComparisonSection() {
                 <p>
                   Organizations hire the services of management consultants for a number of reasons, including, for
                   example, to gain external, and presumably more objective advice and recommendations, to gain access to
-                  the consultants' specialized expertise, or simply as temporary help during a one-time project, where
+                  the consultants&apos; specialized expertise, or simply as temporary help during a one-time project, where
                   the hiring of permanent employees is not required.
                 </p>
               </div>
@@ -86,7 +86,7 @@ export default function ComparisonSection() {
             <div>
               <p>
                 Because of their exposure to and relationships with numerous organizations, consultancies are often
-                knowledgeable of industry 'best practices'. Consultancies often provide organizational change management
+                knowledgeable of industry &apos;best practices&apos;. Consultancies often provide organizational change management
                 assistance, development of business management skills, technology implementation, strategy development,
                 and operational improvement services.
               </p>

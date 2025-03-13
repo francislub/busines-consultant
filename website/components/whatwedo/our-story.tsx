@@ -15,8 +15,6 @@ export default function OurStory() {
     "While there are plenty of general business consultants, most do not have direct knowledge or experience in the Construction industry and therefore don't understand or know how to solve the challenges many of these businesses face every day. As an experienced business owner and successful contractor, he believed he could provide the answers they were looking for by starting a construction consulting firm."
   ]
   
-  const highlightText = "By 2019, the majority of our clients were located outside of Georgia and Ascent became one of the top construction management consulting firms in the US. Currently, no other firm offers the expertise, depth and variety of consulting services specifically for construction companies."
-  
   return (
     <div className="bg-black text-white py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">

@@ -41,7 +41,7 @@ function StatCounter({ stat }: { stat: Stat }) {
       const duration = 2000 // 2 seconds
       const frameDuration = 1000 / 60 // 60fps
       const totalFrames = Math.round(duration / frameDuration)
-      const increment = stat.value / totalFrames
+      // const increment = stat.value / totalFrames
 
       let currentFrame = 0
       const counter = setInterval(() => {

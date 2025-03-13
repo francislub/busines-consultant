@@ -36,8 +36,8 @@ export async function GET() {
     const monthlyVisitsData = []
     for (let i = 6; i >= 0; i--) {
       const date = subMonths(new Date(), i)
-      const monthStart = startOfMonth(date)
-      const monthEnd = endOfMonth(date)
+      // const monthStart = startOfMonth(date)
+      // const monthEnd = endOfMonth(date)
       const monthName = format(date, "MMM")
 
       // In a real app, you would have a visits or analytics table

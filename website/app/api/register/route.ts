@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     console.log("User created successfully:", user.id)
 
     // Return user without password
-    const { password: _, ...userWithoutPassword } = user
+    const { password, ...userWithoutPassword } = user;
 
     return NextResponse.json(
       { user: userWithoutPassword, message: "User registered successfully" },

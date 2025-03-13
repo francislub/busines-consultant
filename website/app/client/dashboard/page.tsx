@@ -299,7 +299,7 @@ export default function ClientDashboard() {
                     ))
                   ) : (
                     <div className="text-center py-8">
-                      <p className="text-gray-500 mb-4">You haven't submitted any inquiries yet</p>
+                      <p className="text-gray-500 mb-4">You haven&apos;t submitted any inquiries yet</p>
                       <Button className="bg-red-600 hover:bg-red-700" onClick={handleNewInquiry}>
                         Submit Your First Inquiry
                       </Button>
@@ -355,7 +355,7 @@ export default function ClientDashboard() {
                     ))
                   ) : (
                     <div className="text-center py-8">
-                      <p className="text-gray-500 mb-4">You don't have any upcoming consultations</p>
+                      <p className="text-gray-500 mb-4">You don&apos;t have any upcoming consultations</p>
                       <Button
                         className="bg-red-600 hover:bg-red-700"
                         onClick={() => router.push("/client/dashboard/consultations/schedule")}
@@ -410,7 +410,7 @@ export default function ClientDashboard() {
                     ))
                   ) : (
                     <div className="text-center py-8">
-                      <p className="text-gray-500 mb-4">You don't have any messages</p>
+                      <p className="text-gray-500 mb-4">You don&apos;t have any messages</p>
                       <Button
                         className="bg-red-600 hover:bg-red-700"
                         onClick={() => router.push("/client/dashboard/messages/new")}
@@ -464,6 +464,7 @@ function formatTimeAgo(dateString: string): string {
     const date = new Date(dateString)
     return formatDistanceToNow(date, { addSuffix: true })
   } catch (error) {
+    console.error("Date parsing error:", error); 
     return "Invalid date"
   }
 }

@@ -3,7 +3,7 @@
 import { UploadDropzone } from "@uploadthing/react"
 import { useState } from "react"
 import { toast } from "sonner"
-import { OurFileRouter } from "@/app/api/uploadthing/core"
+// import { OurFileRouter } from "@/app/api/uploadthing/core"
 
 export function UploadImage() {
   const [fileUrl, setFileUrl] = useState<string | null>(null)

@@ -130,10 +130,10 @@ export default function ContactForm() {
             transition={{ duration: 0.6 }}
             className="space-y-6"
           >
-            <h2 className="text-3xl md:text-4xl font-bold">We'd Love to Hear From You</h2>
+            <h2 className="text-3xl md:text-4xl font-bold">We&apos;d Love to Hear From You</h2>
 
             <p className="text-gray-400">
-              If you're interested in learning more, fill out our contact form and we'll be in touch within 2 business
+              If you&apos;re interested in learning more, fill out our contact form and we&apos;ll be in touch within 2 business
               days.
             </p>
 

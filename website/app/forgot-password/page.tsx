@@ -42,6 +42,8 @@ export default function ForgotPasswordPage() {
     try {
       // In a real application, you would call an API endpoint to handle password reset
       // For now, we'll just simulate a successful request
+      console.log("Reset password request for:", data.email);
+      
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
       setSuccess("If an account exists with that email, we've sent password reset instructions.")
@@ -58,7 +60,7 @@ export default function ForgotPasswordPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold">Forgot password</CardTitle>
-          <CardDescription>Enter your email address and we'll send you a link to reset your password</CardDescription>
+          <CardDescription>Enter your email address and we&apos;ll send you a link to reset your password</CardDescription>
         </CardHeader>
         <CardContent>
           {error && (

@@ -31,7 +31,6 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import AdminLayout from "@/components/admin-layout"
 import { useSession } from "next-auth/react"
-import { UploadImage } from "@/components/ui/upload-thing"
 import ImageInput from '@/components/ImageInput';
 import Image from "next/image"
 import { toast } from "sonner"

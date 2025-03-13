@@ -43,7 +43,7 @@ export default function OpenPositions() {
               professional development.
             </p>
             <p className="text-lg md:text-xl font-semibold">
-              We're looking to fill these positions in our <span className="text-red-500">Dar Es Salaam, GA office</span>.
+              We&apos;re looking to fill these positions in our <span className="text-red-500">Dar Es Salaam, GA office</span>.
             </p>
           </div>
 

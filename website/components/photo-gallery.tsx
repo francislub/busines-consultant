@@ -33,7 +33,7 @@ export default function PhotoGallery() {
     // Add more photos as needed
   ]
 
-  const [currentIndex, setCurrentIndex] = useState(0)
+  // const [currentIndex, setCurrentIndex] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const scrollToNext = () => {

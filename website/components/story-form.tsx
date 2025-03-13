@@ -33,7 +33,6 @@ export function StoryForm({ initialData, onSubmit, isSubmitting }: StoryFormProp
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
   } = useForm<StoryFormValues>({
     resolver: zodResolver(storySchema),
     defaultValues: initialData || {

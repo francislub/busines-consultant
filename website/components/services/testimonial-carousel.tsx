@@ -109,7 +109,7 @@ export default function TestimonialCarousel({
                     ))}
                   </div>
                   <blockquote className="text-xl italic text-slate-700 mb-6">
-                    "{testimonials[currentIndex].quote}"
+                    {testimonials[currentIndex].quote}
                   </blockquote>
                   <div>
                     <p className="font-semibold text-slate-900">{testimonials[currentIndex].name}</p>

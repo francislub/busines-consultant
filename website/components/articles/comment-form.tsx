@@ -18,7 +18,7 @@ interface CommentFormProps {
 }
 
 export default function CommentForm({ articleId }: CommentFormProps) {
-  const { data: session } = useSession()
+  const { data: _session } = useSession()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     firstName: "",
@@ -56,6 +56,7 @@ export default function CommentForm({ articleId }: CommentFormProps) {
 
       toast.success("Your comment has been submitted successfully.")
     } catch (error) {
+      console.error("Date parsing error:", error); 
       toast.error("Failed to submit comment. Please try again.")
     } finally {
       setIsSubmitting(false)

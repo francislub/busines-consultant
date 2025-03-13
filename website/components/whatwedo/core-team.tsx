@@ -23,7 +23,7 @@ interface TeamMemberProps {
   isInView: boolean
 }
 
-function TeamMember({ member, index, isInView }: TeamMemberProps) {
+function TeamMember({ member }: TeamMemberProps) {
   const router = useRouter()
 
   return (

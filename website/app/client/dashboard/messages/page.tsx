@@ -195,7 +195,7 @@ export default function MessagesPage() {
               <CardHeader>
                 <CardTitle>Send a Message</CardTitle>
                 <CardDescription>
-                  Send a message to our team. We'll get back to you as soon as possible.
+                  Send a message to our team. We&apos;ll get back to you as soon as possible.
                 </CardDescription>
               </CardHeader>
               <CardContent>

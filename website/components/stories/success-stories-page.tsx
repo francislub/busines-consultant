@@ -39,7 +39,7 @@ export default function SuccessStoriesPage() {
   const [stories, setStories] = useState<SuccessStory[]>([])
   const [filteredStories, setFilteredStories] = useState<SuccessStory[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [isLoaded, setIsLoaded] = useState(false)
+  // const [isLoaded, setIsLoaded] = useState(false)
 
   // Fetch stories from API
   useEffect(() => {
@@ -71,9 +71,9 @@ export default function SuccessStoriesPage() {
   }, [selectedCategory, stories])
 
   // Set loaded state after initial render for animations
-  useEffect(() => {
-    setIsLoaded(true)
-  }, [])
+  // useEffect(() => {
+  //   setIsLoaded(true)
+  // }, [])
 
   return (
     <div className="flex flex-col min-h-screen">

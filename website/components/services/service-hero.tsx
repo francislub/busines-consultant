@@ -10,10 +10,10 @@ import { Button } from "@/components/ui/button"
 
 interface ServiceHeroProps {
   service: Service
-  breadcrumbSlug: string
+  // breadcrumbSlug: string
 }
 
-export default function ServiceHero({ service, breadcrumbSlug }: ServiceHeroProps) {
+export default function ServiceHero({ service }: ServiceHeroProps) {
   return (
     <>
       {/* Hero Section */}

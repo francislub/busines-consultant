@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Select } from "@/components/ui/select"
 import { Label } from "@/components/ui/label"
 import { toast } from "sonner"
 
@@ -39,6 +38,8 @@ export default function ApplicationForm() {
       console.log(data)
       toast.success("Application submitted successfully!")
     } catch (error) {
+      console.error("Date parsing error:", error);
+      
       toast.error("Error submitting application. Please try again.")
     }
     setIsSubmitting(false)

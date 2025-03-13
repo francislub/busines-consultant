@@ -67,7 +67,7 @@ export default function NewMessagePage() {
         <Card className="max-w-2xl mx-auto">
           <CardHeader>
             <CardTitle>Send a Message</CardTitle>
-            <CardDescription>Send a message to our team and we'll get back to you as soon as possible.</CardDescription>
+            <CardDescription>Send a message to our team and we&apos;ll get back to you as soon as possible.</CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
             <CardContent className="space-y-4">

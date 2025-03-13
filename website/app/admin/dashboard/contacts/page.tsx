@@ -5,7 +5,6 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
 import { useSession } from "next-auth/react"
-import { motion } from "framer-motion"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -22,7 +21,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { Search, MoreHorizontal, Eye, Trash2, ChevronLeft, ChevronRight, RefreshCw, Filter } from "lucide-react"
+import { Search, Eye, Trash2, ChevronLeft, ChevronRight, RefreshCw, Filter } from "lucide-react"
 import AdminLayout from "@/components/admin-layout"
 import { toast } from "sonner"
 
@@ -104,7 +103,7 @@ export default function ContactsPage() {
     }
   }
 
-  const handleStatusChange = async (contactId: string, newStatus: string) => {
+  const handleStatusChange = async (contactId: string, newStatus: "NEW" | "IN_PROGRESS" | "COMPLETED" | "ARCHIVED") => {
     try {
       const response = await fetch(`/api/contacts/${contactId}`, {
         method: "PATCH",
@@ -120,7 +119,7 @@ export default function ContactsPage() {
 
       // Update the contact in the local state
       setContacts(
-        contacts.map((contact) => (contact.id === contactId ? { ...contact, status: newStatus as any } : contact)),
+        contacts.map((contact) => (contact.id === contactId ? { ...contact, status: newStatus } : contact)),
       )
 
       toast.success("Contact status updated successfully")

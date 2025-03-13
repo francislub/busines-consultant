@@ -1,21 +1,27 @@
-import Link from "next/link"
-import { ArrowDown } from "lucide-react"
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowDown } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section className="bg-white text-black py-16 md:py-24 px-6 md:px-12 lg:px-20">
-      <div className="container mx-auto">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-16">
+    <section 
+      className="relative bg-cover bg-center bg-no-repeat text-black py-16 md:py-24 px-6 md:px-12 lg:px-20"
+      style={{ backgroundImage: "url('/images/three.jpg')" }} // Ensure correct path
+    >
+      {/* Overlay to improve readability */}
+      <div className="absolute inset-0 bg-black bg-opacity-50"></div>
+
+      <div className="container mx-auto relative z-10">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-center text-white mb-16">
           Building Better
           <br />
-          Construction Companies
+          Mancha Development Company
         </h1>
 
-        <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto text-white">
           <div>
             <p className="text-xl md:text-2xl font-medium mb-6">
-            Mancha Development Company is the premier provider of business, operations, management, technology, and marketing
-              consulting services for construction companies in North America.
+            Mancha Development Company is a business consulting firm specializing in entrepreneurial skills, business management, monitoring and evaluation, and trainer development.
             </p>
 
             <div className="mt-10">
@@ -30,17 +36,18 @@ export default function Hero() {
           </div>
 
           <div className="space-y-6">
-            <p className="text-lg">We are committed to helping our clients Build Better Construction Companies.</p>
+          <p className="text-lg">
+            We are dedicated to empowering businesses with strategic consulting solutions for sustainable growth and success.
+          </p>
 
-            <p className="text-lg">
-              Unlike other business consulting firms, we <span className="font-bold">only</span> work with construction
-              companies and contractors. As experienced contractors and business owners, we understand how our clients
-              think and operate, which is why they choose us to help solve their most important challenges.
-            </p>
+          <p className="text-lg">
+            Unlike general consulting firms, we <span className="font-bold">specialize</span> in business development, 
+            entrepreneurship, and operational excellence. With our deep industry expertise, we help businesses navigate 
+            challenges, optimize performance, and achieve their long-term goals.
+          </p>
           </div>
         </div>
       </div>
     </section>
-  )
+  );
 }
-

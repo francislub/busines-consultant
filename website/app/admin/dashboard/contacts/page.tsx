@@ -103,31 +103,30 @@ export default function ContactsPage() {
     }
   }
 
-  const handleStatusChange = async (contactId: string, newStatus: "NEW" | "IN_PROGRESS" | "COMPLETED" | "ARCHIVED") => {
-    try {
-      const response = await fetch(`/api/contacts/${contactId}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      })
+  // const handleStatusChange = async (contactId: string, newStatus: "NEW" | "IN_PROGRESS" | "COMPLETED" | "ARCHIVED") => {
+  //   try {
+  //     const response = await fetch(`/api/contacts/${contactId}`, {
+  //       method: "PATCH",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ status: newStatus }),
+  //     })
 
-      if (!response.ok) {
-        throw new Error("Failed to update status")
-      }
+  //     if (!response.ok) {
+  //       throw new Error("Failed to update status")
+  //     }
 
-      // Update the contact in the local state
-      setContacts(
-        contacts.map((contact) => (contact.id === contactId ? { ...contact, status: newStatus } : contact)),
-      )
+  //     setContacts(
+  //       contacts.map((contact) => (contact.id === contactId ? { ...contact, status: newStatus } : contact)),
+  //     )
 
-      toast.success("Contact status updated successfully")
-    } catch (error) {
-      console.error("Error updating contact status:", error)
-      toast.error("Failed to update contact status")
-    }
-  }
+  //     toast.success("Contact status updated successfully")
+  //   } catch (error) {
+  //     console.error("Error updating contact status:", error)
+  //     toast.error("Failed to update contact status")
+  //   }
+  // }
 
   const handleDeleteContact = async () => {
     if (!selectedContact) return

@@ -111,7 +111,7 @@ export default function BusinessCTA() {
                     className="mb-2"
                   />
                 </motion.div> */}
-                <p className="font-bold text-xl">Adam Cooper, President</p>
+                <p className="font-bold text-xl">Mr. Adam, President</p>
               </motion.div>
             </motion.div>
           </motion.div>

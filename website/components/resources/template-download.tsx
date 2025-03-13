@@ -21,25 +21,25 @@ export default function TemplateDownloads() {
     {
       id: "insurance",
       title: "Insurance Coverage Reference List",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/r2.PNG-89MXYeSmM3jsk9cN54bi4OHMnMWStG.png",
+      image: "/images/three.jpg",
       downloadUrl: "/downloads/insurance-coverage-list.pdf",
     },
     {
       id: "language",
-      title: "Construction Language Reference List",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/r2.PNG-89MXYeSmM3jsk9cN54bi4OHMnMWStG.png",
+      title: "Language Reference List",
+      image: "/images/two.avif",
       downloadUrl: "/downloads/construction-language-list.pdf",
     },
     {
       id: "closeout",
       title: "Construction Project Close-Out Meeting Agenda",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/r2.PNG-89MXYeSmM3jsk9cN54bi4OHMnMWStG.png",
+      image: "/images/three.jpg",
       downloadUrl: "/downloads/project-closeout-agenda.pdf",
     },
     {
       id: "kpis",
       title: "Financial KPIs for Construction Companies",
-      image: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/r2.PNG-89MXYeSmM3jsk9cN54bi4OHMnMWStG.png",
+      image: "/images/three.jpg",
       downloadUrl: "/downloads/financial-kpis.pdf",
     },
   ]

@@ -11,8 +11,8 @@ export default function HeroBanner() {
     <div className="relative h-[50vh] md:h-[60vh] overflow-hidden">
       <motion.div style={{ y }} className="absolute inset-0">
         <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/r1.PNG-bwUmabJOa6pH9UyuiG3kuLkTVibZ87.png"
-          alt="Construction site"
+          src="/images/three.jpg"
+          alt="resources site"
           fill
           className="object-cover brightness-50"
           priority

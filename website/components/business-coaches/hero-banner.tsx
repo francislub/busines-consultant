@@ -8,7 +8,7 @@ export default function HeroBanner() {
     <div className="relative h-[50vh] md:h-[60vh] lg:h-[70vh] overflow-hidden">
       {/* Background Image */}
       <Image
-        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1.PNG-1Z486PwTgryhw31qNiluUNucGpRq1a.png"
+        src="/images/one.webp"
         alt="Business presentation"
         fill
         className="object-cover brightness-50"

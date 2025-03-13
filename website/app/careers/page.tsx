@@ -7,7 +7,7 @@ export default function Careers() {
     <main className="min-h-screen bg-black">
       <HeroBanner />
       <OpenPositions />
-      <ApplicationForm />
+      {/* <ApplicationForm /> */}
     </main>
   )
 }

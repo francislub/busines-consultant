@@ -9,7 +9,7 @@ export default function ConsultationCTA() {
   return (
     <div className="relative h-[400px] md:h-[500px] overflow-hidden">
       <Image
-        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/r3.PNG-N7npFXOaXWxcjuJRqo9nMCzN4zAvSK.png"
+        src="/images/three.jpg"
         alt="Modern building interior"
         fill
         className="object-cover brightness-50"

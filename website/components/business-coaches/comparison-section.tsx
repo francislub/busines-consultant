@@ -59,7 +59,7 @@ export default function ComparisonSection() {
               className="relative"
             >
               <Image
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2.PNG-Thg2MrBhzGhgjMvN7GSc0ACFmTzoKH.png"
+                src="/images/one.webp"
                 alt="Consultant explaining on whiteboard"
                 width={600}
                 height={400}

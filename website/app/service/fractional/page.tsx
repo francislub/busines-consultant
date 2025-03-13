@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
 
-import { getServiceBySlug, getServiceTestimonials } from "@/components/service/data"
-import ServiceHero from "@/components/service/service-hero"
-import ServiceFeatures from "@/components/service/service-features"
-import TestimonialCarousel from "@/components/service/testimonial-carousel"
-import FAQSection from "@/components/service/faq-section"
-import ServiceCta from "@/components/service/service-cta"
-import RelatedServices from "@/components/service/related-services"
+import { getServiceBySlug, getServiceTestimonials } from "@/components/services/data"
+import ServiceHero from "@/components/services/service-hero"
+import ServiceFeatures from "@/components/services/service-features"
+import TestimonialCarousel from "@/components/services/testimonial-carousel"
+import FAQSection from "@/components/services/faq-section"
+import ServiceCta from "@/components/services/service-cta"
+import RelatedServices from "@/components/services/related-services"
 
 export const metadata: Metadata = {
   title: "Trainer Development | Mancha Development Company",

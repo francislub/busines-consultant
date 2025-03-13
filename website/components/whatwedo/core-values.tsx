@@ -48,28 +48,29 @@ export default function CoreValues() {
     {
       title: "Client Satisfaction",
       description:
-        "Serving our clients is our highest priority. Everything we do serves this purpose directly or indirectly. We respect our clients, take the time to understand their strategic goals and ensure our work delivers impactful results.",
+        "At Mancha Consulting, our clients' success is at the heart of everything we do. We take the time to truly understand their business goals, providing strategic consulting solutions that lead to measurable, impactful results.",
       color: "bg-red-900/90 text-white",
     },
     {
       title: "Employee Satisfaction",
       description:
-        "We help our employees realize their strengths and desires, acknowledge them for their contributions, support them in delivering outstanding value for our clients, and provide authentic and timely feedback.",
+        "Our employees are key to our ability to serve our clients. We focus on recognizing their strengths, fostering a supportive work environment, and providing the resources they need to excel. ",
       color: "bg-purple-900/90 text-white",
     },
     {
       title: "Integrity",
       description:
-        "We do what we say we'll do. We honor our commitments to our clients and our team members. We communicate openly and authentically, and encourage our employees to adhere to the highest standards of ethics and professionalism in everything they do.",
+        "As consultants, integrity is the foundation of every relationship we build. We make promises and keep them, ensuring transparency, trust, and accountability in all our interactions. ",
       color: "bg-blue-900/90 text-white",
     },
     {
       title: "Community Participation",
       description:
-        "We involve ourselves in our industry as active members and contribute to our community. We provide valuable, free content and information, and believe that our current participation is a reflection of our long-term relationship with our community.",
+        "Mancha Consulting is committed to being an active participant in the business community. We provide valuable insights and free resources to help businesses thrive, and we continuously contribute to discussions that push the industry forward.",
       color: "bg-green-900/90 text-white",
     },
   ]
+  
 
   return (
     <div className="bg-black text-white py-16 md:py-24">

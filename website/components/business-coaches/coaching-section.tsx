@@ -11,7 +11,7 @@ export default function CoachingSection() {
   const isInView = useInView(containerRef, { once: true, amount: 0.2 })
 
   return (
-    <div className="bg-black text-white py-16 md:py-24">
+    <div className="text-black bg-white py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <motion.div ref={containerRef} className="space-y-16">
           {/* Coaching Description */}
@@ -23,7 +23,7 @@ export default function CoachingSection() {
               className="space-y-6"
             >
               <h2 className="text-3xl md:text-4xl font-bold">Coaching</h2>
-              <p className="text-gray-300">
+              <p className="text-black">
                 A business coach assists and guides a business owner in running a business by helping them clarify the
                 vision of their business and how it fits in with their personal goals. Business coaching is a process
                 used to take a business from where it is now to where the business owner wants it to be. A coach assists
@@ -35,7 +35,7 @@ export default function CoachingSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-gray-300"
+              className="text-black"
             >
               <p>
                 After clarifying where a business owner would like to take their business, business coaches help plan

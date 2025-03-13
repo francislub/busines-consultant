@@ -14,16 +14,16 @@ interface Position {
 export default function OpenPositions() {
   const positions: Position[] = [
     {
-      title: "Construction Business Consultant",
-      location: "Atlanta, GA",
+      title: "Business Consultant",
+      location: "Dar Es Salaam, GA",
       type: "Full Time",
-      link: "/careers/consultant",
+      link: "/business-coaches",
     },
     {
-      title: "Project Coordinator",
-      location: "Atlanta, GA",
+      title: "Career Guidance",
+      location: "Dar Es Salaam, GA",
       type: "Full Time",
-      link: "/careers/coordinator",
+      link: "/careers",
     },
   ]
 
@@ -43,7 +43,7 @@ export default function OpenPositions() {
               professional development.
             </p>
             <p className="text-lg md:text-xl font-semibold">
-              We're looking to fill these positions in our <span className="text-red-500">Atlanta, GA office</span>.
+              We're looking to fill these positions in our <span className="text-red-500">Dar Es Salaam, GA office</span>.
             </p>
           </div>
 

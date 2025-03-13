@@ -9,7 +9,7 @@ export default function OurPurpose() {
   const isInView = useInView(containerRef, { once: true, amount: 0.3 })
   
   return (
-    <div className="bg-black text-white py-16 md:py-24">
+    <div className="bg-white text-black py-16 md:py-24">
       <div className="container mx-auto px-4 md:px-6">
         <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <motion.div
@@ -20,7 +20,7 @@ export default function OurPurpose() {
           >
             <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
               <Image 
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3.PNG-j6DJXFKG8f3qvwjvprDxxa9ZLdtSPg.png" 
+                src="/images/one.webp"
                 alt="Team members in a meeting" 
                 fill
                 className="object-cover"
@@ -38,7 +38,7 @@ export default function OurPurpose() {
               className="absolute bottom-[-30px] left-[-30px] w-[180px] h-[120px] rounded-lg overflow-hidden border-4 border-red-500/20 shadow-xl"
             >
               <Image 
-                src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/3.PNG-j6DJXFKG8f3qvwjvprDxxa9ZLdtSPg.png" 
+                src="/images/three.jpg"
                 alt="Team collaboration" 
                 fill
                 className="object-cover"
@@ -75,27 +75,28 @@ export default function OurPurpose() {
             
             <div className="space-y-6">
               <motion.p 
-                className="text-gray-300 leading-relaxed"
+                className="text-black-300 leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                Ascent Consulting's purpose is to improve the performance and profitability of 
-                every client's business. By utilizing our comprehensive industry knowledge, 
-                real-world experience and team of dedicated professionals, we create 
-                innovative, customized solutions to help our clients get to the next level of 
-                success.
+                Mancha company's mission is to support businesses in achieving their maximum
+                potential. We leverage deep industry knowledge, practical experience, and a dedicated
+                team to provide tailored consulting solutions that enhance business efficiency, optimize
+                operations, and improve overall profitability. Whether you’re a startup or an established
+                enterprise, we offer the expertise needed to elevate your organization to the next level.
               </motion.p>
               
               <motion.p 
-                className="text-gray-300 leading-relaxed"
+                className="text-black leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
               >
-                Our just cause is to improve, elevate, and better the construction industry in all 
-                areas for the benefit of everyone who chooses to make their career in the 
-                construction industry.
+                Our consulting services focus on solving complex business challenges, identifying
+                growth opportunities, and providing strategic guidance. We help businesses streamline
+                their operations, optimize workflows, and develop strategies to compete effectively
+                in today’s fast-paced market environment.
               </motion.p>
               
               <motion.div

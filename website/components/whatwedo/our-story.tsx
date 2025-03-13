@@ -11,9 +11,9 @@ export default function OurStory() {
   const isInView = useInView(containerRef, { once: true, amount: 0.3 })
   
   const paragraphs = [
-    "Ascent was founded by Adam Cooper in 2014 with the idea of helping local electrical contractors be more successful. Based in Atlanta, Adam had been working for over 20 years in the commercial and industrial construction world and saw a gap in the marketplace.",
-    "While there are plenty of general business consultants, most do not have direct knowledge or experience in the Construction industry and therefore don't understand or know how to solve the challenges many of these businesses face every day. As an experienced business owner and successful contractor, he believed he could provide the answers they were looking for by starting a construction consulting firm.",
-]
+    "Mancha company was founded by Adam in 2014 with the idea of helping local electrical contractors be more successful. Based in Atlanta, Adam had been working for over 20 years in the commercial and industrial construction world and saw a gap in the marketplace.",
+    "While there are plenty of general business consultants, most do not have direct knowledge or experience in the Construction industry and therefore don't understand or know how to solve the challenges many of these businesses face every day. As an experienced business owner and successful contractor, he believed he could provide the answers they were looking for by starting a construction consulting firm."
+  ]
   
   const highlightText = "By 2019, the majority of our clients were located outside of Georgia and Ascent became one of the top construction management consulting firms in the US. Currently, no other firm offers the expertise, depth and variety of consulting services specifically for construction companies."
   
@@ -53,14 +53,14 @@ export default function OurStory() {
                 </motion.p>
               ))}
               
-              <motion.p 
+              {/* <motion.p 
                 className="text-xl font-semibold"
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
                 transition={{ duration: 0.6, delay: 0.7 }}
               >
                 {highlightText}
-              </motion.p>
+              </motion.p> */}
               
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -85,7 +85,7 @@ export default function OurStory() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="relative z-10"
             >
-              <div className="relative rounded-full overflow-hidden border-4 border-red-500/20 w-[280px] h-[280px] mx-auto">
+              <div className="relative rounded-full overflow-hidden border-4 border-red-500/20 w-[400px] h-[400px] mx-auto">
                 <Image 
                   src="/images/ceo.jpg"
                   alt="Adam Cooper" 

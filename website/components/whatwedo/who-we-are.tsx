@@ -24,8 +24,8 @@ export default function WhoWeAre() {
       transition={{ duration: 0.8 }}
     >
       <Image
-        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/1.PNG-s5J8vRF3Gsc4wSCnvUx5HriNVyXfjN.png"
-        alt="Construction workers overlooking a city"
+        src="/images/one.webp"
+        alt="Business overlooking a city"
         fill
         className="object-cover"
         priority

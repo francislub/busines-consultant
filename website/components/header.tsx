@@ -27,10 +27,10 @@ export default function Header() {
       name: "What We Do",
       href: "/services",
       dropdown: [
-        { name: "Business Consulting", href: "/services/business-consulting" },
-        { name: "Operations Management", href: "/services/operations-management" },
-        { name: "Technology Solutions", href: "/services/technology-solutions" },
-        { name: "Marketing Services", href: "/services/marketing-services" },
+        { name: "Business Consulting", href: "/service/growth" },
+        { name: "Operations Management", href: "/service/operations" },
+        { name: "Professional Trainings", href: "/service/fractional" },
+        { name: "Monitoring & Evaluation", href: "/service/procore" },
       ],
     },
     {

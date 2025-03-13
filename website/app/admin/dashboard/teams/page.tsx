@@ -47,16 +47,28 @@ const mockTeams = Array.from({ length: 8 }).map((_, i) => ({
   updatedAt: new Date(Date.now() - Math.floor(Math.random() * 1000000000)),
 }))
 
+// Define a Team type to ensure type safety
+interface Team {
+  id: string;
+  name: string;
+  title: string;
+  description: string;
+  image: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+
 export default function TeamsPage() {
   const router = useRouter()
   const { data: session, status } = useSession()
-  const [teams, setTeams] = useState(mockTeams)
+  const [teams, setTeams] = useState<Team[]>(mockTeams)  // Specify Team type
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [currentTeam, setCurrentTeam] = useState<any>(null)
+  const [currentTeam, setCurrentTeam] = useState<Team | null>(null)  // Use Team type here
   const [imageUrl, setImageUrl] = useState("")
   const [formData, setFormData] = useState({
     name: "",

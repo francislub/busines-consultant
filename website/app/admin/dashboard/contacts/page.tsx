@@ -1,3 +1,4 @@
+// app/admin/dashboard/contacts/page.tsx
 "use client"
 
 import { useState, useEffect } from "react"
@@ -243,14 +244,14 @@ export default function ContactsPage() {
             <TableBody>
               {filteredContacts.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-8">
                     No contacts found
                   </TableCell>
                 </TableRow>
               ) : (
                 filteredContacts.map((contact) => (
                   <TableRow key={contact.id}>
-                    <TableCell className="font-medium">
+                    <TableCell>
                       {contact.firstName} {contact.lastName}
                     </TableCell>
                     <TableCell className="hidden md:table-cell">{contact.company}</TableCell>
@@ -259,63 +260,14 @@ export default function ContactsPage() {
                       {contact.city}, {contact.state}
                     </TableCell>
                     <TableCell>{getStatusBadge(contact.status)}</TableCell>
-                    <TableCell className="hidden md:table-cell">
-                      {format(new Date(contact.createdAt), "MMM d, yyyy")}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            onClick={() => {
-                              setSelectedContact(contact)
-                              setIsViewDialogOpen(true)
-                            }}
-                          >
-                            <Eye className="mr-2 h-4 w-4" />
-                            View Details
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleStatusChange(contact.id, "NEW")}
-                            disabled={contact.status === "NEW"}
-                          >
-                            Mark as New
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleStatusChange(contact.id, "IN_PROGRESS")}
-                            disabled={contact.status === "IN_PROGRESS"}
-                          >
-                            Mark as In Progress
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleStatusChange(contact.id, "COMPLETED")}
-                            disabled={contact.status === "COMPLETED"}
-                          >
-                            Mark as Completed
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleStatusChange(contact.id, "ARCHIVED")}
-                            disabled={contact.status === "ARCHIVED"}
-                          >
-                            Mark as Archived
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="text-red-600"
-                            onClick={() => {
-                              setSelectedContact(contact)
-                              setIsDeleteDialogOpen(true)
-                            }}
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                    <TableCell className="hidden md:table-cell">{format(new Date(contact.createdAt), "PPP")}</TableCell>
+                    <TableCell className="text-right space-x-2">
+                      <Button variant="outline" size="sm" onClick={() => setIsViewDialogOpen(true)}>
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => setSelectedContact(contact)}>
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </TableCell>
                   </TableRow>
                 ))
@@ -324,127 +276,44 @@ export default function ContactsPage() {
           </Table>
         </div>
 
-        <div className="flex items-center justify-between py-4">
-          <div className="text-sm text-muted-foreground">
-            Showing <span className="font-medium">{filteredContacts.length}</span> of{" "}
-            <span className="font-medium">{pagination.total}</span> contacts
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })}
-              disabled={pagination.page <= 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Previous
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })}
-              disabled={pagination.page >= pagination.pages}
-            >
-              Next
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+        <div className="flex justify-between items-center mt-4">
+          <Button variant="outline" size="sm" onClick={() => setPagination({ ...pagination, page: pagination.page - 1 })} disabled={pagination.page === 1}>
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span>
+            Page {pagination.page} of {pagination.pages}
+          </span>
+          <Button variant="outline" size="sm" onClick={() => setPagination({ ...pagination, page: pagination.page + 1 })} disabled={pagination.page === pagination.pages}>
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
-      {/* View Contact Dialog */}
       <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="max-w-3xl">
+        <DialogContent>
           <DialogHeader>
             <DialogTitle>Contact Details</DialogTitle>
             <DialogDescription>
-              Submitted on {selectedContact && format(new Date(selectedContact.createdAt), "MMMM d, yyyy 'at' h:mm a")}
+              {/* Add contact details here */}
             </DialogDescription>
           </DialogHeader>
-
-          {selectedContact && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-6"
-            >
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">Contact Information</h3>
-                  <div className="mt-2 space-y-2">
-                    <p className="text-sm">
-                      <span className="font-medium">Name:</span> {selectedContact.firstName} {selectedContact.lastName}
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-medium">Email:</span> {selectedContact.email}
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-medium">Phone:</span> {selectedContact.phone}
-                    </p>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">Company Information</h3>
-                  <div className="mt-2 space-y-2">
-                    <p className="text-sm">
-                      <span className="font-medium">Company:</span> {selectedContact.company}
-                    </p>
-                    {selectedContact.website && (
-                      <p className="text-sm">
-                        <span className="font-medium">Website:</span>{" "}
-                        <a
-                          href={selectedContact.website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:underline"
-                        >
-                          {selectedContact.website}
-                        </a>
-                      </p>
-                    )}
-                    <p className="text-sm">
-                      <span className="font-medium">Location:</span> {selectedContact.city}, {selectedContact.state}
-                    </p>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500">Status</h3>
-                  <div className="mt-2">{getStatusBadge(selectedContact.status)}</div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-medium text-gray-500">Message</h3>
-                <div className="mt-2 p-4 bg-gray-50 rounded-md">
-                  <p className="text-sm whitespace-pre-wrap">{selectedContact.message}</p>
-                </div>
-              </div>
-            </motion.div>
-          )}
         </DialogContent>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Delete Contact</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the contact submission.
+              Are you sure you want to delete this contact?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className="bg-red-600 hover:bg-red-700" onClick={handleDeleteContact}>
-              Delete
-            </AlertDialogAction>
+            <AlertDialogCancel onClick={() => setIsDeleteDialogOpen(false)}>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteContact}>Delete</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
     </AdminLayout>
   )
 }
-

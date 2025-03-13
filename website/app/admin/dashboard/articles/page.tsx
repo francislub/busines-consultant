@@ -45,6 +45,15 @@ const mockArticles = Array.from({ length: 10 }).map((_, i) => ({
   updatedAt: new Date(Date.now() - Math.floor(Math.random() * 1000000000)),
 }))
 
+interface Article {
+  id: string
+  title: string
+  description: string
+  image: string
+  createdAt: Date
+  updatedAt: Date
+}
+
 export default function ArticlesPage() {
   const router = useRouter()
   const { data: session, status } = useSession()
@@ -55,7 +64,7 @@ export default function ArticlesPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [currentArticle, setCurrentArticle] = useState<any>(null)
+  const [currentArticle, setCurrentArticle] = useState<Article | null>(null)
   const [formData, setFormData] = useState({
     title: "",
     description: "",

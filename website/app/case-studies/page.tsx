@@ -45,7 +45,7 @@ export default function CaseStudiesPage() {
               Our Client Success Stories
             </h1>
             <p className="text-lg text-slate-300 mb-8 max-w-2xl">
-              Explore how we've helped businesses across various industries overcome challenges, optimize operations,
+              Explore how we have helped businesses across various industries overcome challenges, optimize operations,
               and achieve exceptional results.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
@@ -192,7 +192,7 @@ export default function CaseStudiesPage() {
             <div className="inline-block rounded-lg bg-red-100 px-3 py-1 text-sm text-red-600 mb-4">Case Studies</div>
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-6">Explore Our Success Stories</h2>
             <p className="text-lg text-slate-600">
-              Browse our case studies to see how we've helped organizations across various industries solve complex
+              Browse our case studies to see how we have helped organizations across various industries solve complex
               challenges and achieve their business goals.
             </p>
           </div>

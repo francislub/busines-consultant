@@ -4,7 +4,7 @@ const f = createUploadthing()
  
 export const uploadRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
-    .middleware(async ({ _req }) => {
+    .middleware(async () => {
       // This code runs on your server before upload
       return { userId: "user_id" }
     })

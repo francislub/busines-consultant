@@ -36,7 +36,7 @@ const mockInquiries = Array.from({ length: 8 }).map((_, i) => ({
 
 export default function InquiriesPage() {
   const router = useRouter()
-  const { data: _session, status } = useSession();
+  const { data, status } = useSession();
   const [inquiries, setInquiries] = useState(mockInquiries)
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -151,7 +151,7 @@ export default function InquiriesPage() {
               <DialogHeader>
                 <DialogTitle>Submit New Inquiry</DialogTitle>
                 <DialogDescription>
-                  Submit a new inquiry to our team. We'll get back to you as soon as possible.
+                  Submit a new inquiry to our team. We will get back to you as soon as possible.
                 </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">

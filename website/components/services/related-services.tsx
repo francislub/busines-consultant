@@ -2,7 +2,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight } from 'lucide-react'
 
-import { Service, getRelatedServices } from "@/components/services/data"
+import { getRelatedServices } from "@/components/services/data"
 import { Button } from "@/components/ui/button"
 
 interface RelatedServicesProps {

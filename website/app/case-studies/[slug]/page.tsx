@@ -186,7 +186,7 @@ export default function CaseStudyPage({ params }: CaseStudyPageProps) {
                 </div>
 
                 <blockquote className="text-xl italic text-slate-700 mb-6 mt-4">
-                  "{caseStudy.testimonial.quote}"
+                  {caseStudy.testimonial.quote}
                 </blockquote>
 
                 <div className="flex items-center">
@@ -240,7 +240,7 @@ export default function CaseStudyPage({ params }: CaseStudyPageProps) {
       <section className="py-16 md:py-24 bg-slate-900 text-white">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold tracking-tight mb-6">Let's Create Your Success Story</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-6">Lets Create Your Success Story</h2>
             <p className="text-lg text-slate-300 mb-8">
               Ready to transform your business and achieve measurable results? Contact us today to discuss how our
               tailored solutions can address your specific challenges.

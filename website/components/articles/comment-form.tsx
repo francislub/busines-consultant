@@ -18,7 +18,7 @@ interface CommentFormProps {
 }
 
 export default function CommentForm({ articleId }: CommentFormProps) {
-  const { data: _session } = useSession()
+  const { data } = useSession()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [formData, setFormData] = useState({
     firstName: "",

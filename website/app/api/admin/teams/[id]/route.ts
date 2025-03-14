@@ -12,18 +12,18 @@ const teamSchema = z.object({
 })
 
 // GET a specific team member
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function fetchTeamMember(req: NextRequest, context: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
 
     if (!session || !session.user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
+    const { id } = context.params;
+
     const team = await prisma.team.findUnique({
-      where: {
-        id: params.id,
-      },
+      where: { id },
       include: {
         author: {
           select: {
@@ -33,16 +33,16 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
           },
         },
       },
-    })
+    });
 
     if (!team) {
-      return NextResponse.json({ message: "Team member not found" }, { status: 404 })
+      return NextResponse.json({ message: "Team member not found" }, { status: 404 });
     }
 
-    return NextResponse.json(team)
+    return NextResponse.json(team);
   } catch (error) {
-    console.error("Error fetching team member:", error)
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    console.error("Error fetching team member:", error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
   }
 }
 

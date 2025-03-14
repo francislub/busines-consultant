@@ -11,52 +11,52 @@ const articleSchema = z.object({
 });
 
 // GET a specific article
-// export async function GET (req: Request, context: { params: { id: string } }) {
-//   try {
-//     const session = await getServerSession(authOptions);
+export async function GET (req: Request, context: { params: { id: string } }) {
+  try {
+    const session = await getServerSession(authOptions);
 
-//     if (!session || !session.user) {
-//       return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-//     }
+    if (!session || !session.user) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
 
-//     const article = await prisma.article.findUnique({
-//       where: {
-//         id: context.params.id,
-//       },
-//       include: {
-//         author: {
-//           select: {
-//             id: true,
-//             name: true,
-//             email: true,
-//           },
-//         },
-//         comments: {
-//           select: {
-//             id: true,
-//             content: true,
-//             createdAt: true,
-//             author: {
-//               select: {
-//                 id: true,
-//                 name: true,
-//               },
-//             },
-//           },
-//         },
-//       },
-//     });
+    const article = await prisma.article.findUnique({
+      where: {
+        id: context.params.id,
+      },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        comments: {
+          select: {
+            id: true,
+            content: true,
+            createdAt: true,
+            author: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
 
-//     if (!article) {
-//       return NextResponse.json({ message: "Article not found" }, { status: 404 });
-//     }
+    if (!article) {
+      return NextResponse.json({ message: "Article not found" }, { status: 404 });
+    }
 
-//     return NextResponse.json(article);
-//   } catch (error) {
-//     console.error("Error fetching article:", error);
-//     return NextResponse.json({ message: "Internal server error" }, { status: 500 });
-//   }
-// }
+    return NextResponse.json(article);
+  } catch (error) {
+    console.error("Error fetching article:", error);
+    return NextResponse.json({ message: "Internal server error" }, { status: 500 });
+  }
+}
 
 // PUT (update) an article
 export async function PUT(req: Request, context: { params: { id: string } }) {

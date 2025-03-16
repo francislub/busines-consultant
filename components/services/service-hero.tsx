@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 
-import type { Service } from "../data"
+import type { Service } from "./data"
 import { Button } from "@/components/ui/button"
 
 export interface ServiceHeroProps {

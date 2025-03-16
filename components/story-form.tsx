@@ -26,7 +26,7 @@ interface StoryFormProps {
 }
 
 export function StoryForm({ initialData, onSubmit, isSubmitting }: StoryFormProps) {
-  const [image, setImage] = useState(initialData?.image || "")
+  const [setImage] = useState(initialData?.image || "")
 
   const {
     register,

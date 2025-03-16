@@ -39,7 +39,7 @@ export const ImageUpload = ({
       </div>
       {!disabled && (
         <div className="flex justify-center">
-          <UploadButton<OurFileRouter>
+          <UploadButton<OurFileRouter, { url: string }>
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
               onChange(res?.[0]?.url)

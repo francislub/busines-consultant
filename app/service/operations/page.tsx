@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
 
-import { getServiceBySlug, getServiceTestimonials } from "../data"
-import ServiceHero from "../components/service-hero"
-import ServiceFeatures from "../components/service-features"
-import TestimonialCarousel from "../components/testimonial-carousel"
-import FAQSection from "../components/faq-section"
-import ServiceCta from "../components/service-cta"
-import RelatedServices from "../components/related-services"
+import { getServiceBySlug, getServiceTestimonials } from "@/components/services/data"
+import ServiceHero from "@/components/services/service-hero"
+import ServiceFeatures from "@/components/services/service-features"
+import TestimonialCarousel from "@/components/services/testimonial-carousel"
+import FAQSection from "@/components/services/faq-section"
+import ServiceCta from "@/components/services/service-cta"
+import RelatedServices from "@/components/services/related-services"
 
 export const metadata: Metadata = {
   title: "Entrepreneurial Skills Development | Mancha Development Company",

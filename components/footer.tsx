@@ -60,7 +60,8 @@ const FooterHeading = ({ children }: { children: React.ReactNode }) => (
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
-  const { toast } = useToast()
+  // Fix: Use the showToast method instead of destructuring toast
+  const { showToast } = useToast()
   const isMobile = useMobile()
   const [email, setEmail] = useState("")
   const [showBackToTop, setShowBackToTop] = useState(false)
@@ -86,18 +87,13 @@ export default function Footer() {
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault()
     if (!email.trim()) {
-      toast({
-        title: "Error",
-        description: "Please enter a valid email address",
-        variant: "destructive",
-      })
+      // Fix: Use showToast instead of toast
+      showToast("Please enter a valid email address")
       return
     }
 
-    toast({
-      title: "Success!",
-      description: "You've been subscribed to our newsletter",
-    })
+    // Fix: Use showToast instead of toast
+    showToast("You've been subscribed to our newsletter")
     setEmail("")
   }
 

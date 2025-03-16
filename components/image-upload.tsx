@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { UploadButton } from "@uploadthing/react"
-import { OurFileRouter, OurFile } from "@/lib/uploadthing"
+import { OurFileRouter } from "@/lib/uploadthing"
 import Image from "next/image"
 import { Loader2 } from 'lucide-react'
 
@@ -8,6 +8,10 @@ interface ImageUploadProps {
   onChange: (url?: string) => void
   value: string
   disabled?: boolean
+}
+
+interface UploadedFile {
+  url: string
 }
 
 export const ImageUpload = ({
@@ -39,7 +43,7 @@ export const ImageUpload = ({
       </div>
       {!disabled && (
         <div className="flex justify-center">
-          <UploadButton<OurFileRouter, OurFile[]>
+          <UploadButton<OurFileRouter, UploadedFile[]>
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
               onChange(res?.[0]?.url)

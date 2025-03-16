@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
 
-import { getServiceBySlug, getServiceTestimonials } from "@/components/services/data"
-import ServiceHero from "@/components/services/service-hero"
-import ServiceFeatures from "@/components/services/service-features"
-import TestimonialCarousel from "@/components/services/testimonial-carousel"
-import FAQSection from "@/components/services/faq-section"
-import ServiceCta from "@/components/services/service-cta"
-import RelatedServices from "@/components/services/related-services"
+import { getServiceBySlug, getServiceTestimonials } from "../data"
+import ServiceHero from "../components/service-hero"
+import ServiceFeatures from "../components/service-features"
+import TestimonialCarousel from "../components/testimonial-carousel"
+import FAQSection from "../components/faq-section"
+import ServiceCta from "../components/service-cta"
+import RelatedServices from "../components/related-services"
 
 export const metadata: Metadata = {
   title: "Trainer Development | Mancha Development Company",
@@ -25,7 +25,7 @@ export default function TrainerDevelopmentPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <ServiceHero service={service} breadcrumbSlug="fractional" />
+      <ServiceHero service={service} />
 
       {/* Overview Section */}
       <section className="py-16 md:py-24 bg-white">
@@ -139,7 +139,7 @@ export default function TrainerDevelopmentPage() {
               Comprehensive Trainer Development Solutions
             </h2>
             <p className="text-lg text-slate-600">
-              We offer a range of specialized services to help develop your team&apos;s capabilities and ensure effective
+              We offer a range of specialized services to help develop your team's capabilities and ensure effective
               knowledge transfer
             </p>
           </div>

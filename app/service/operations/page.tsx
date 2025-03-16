@@ -1,12 +1,12 @@
 import type { Metadata } from "next"
 
-import { getServiceBySlug, getServiceTestimonials } from "@/components/services/data"
-import ServiceHero from "@/components/services/service-hero"
-import ServiceFeatures from "@/components/services/service-features"
-import TestimonialCarousel from "@/components/services/testimonial-carousel"
-import FAQSection from "@/components/services/faq-section"
-import ServiceCta from "@/components/services/service-cta"
-import RelatedServices from "@/components/services/related-services"
+import { getServiceBySlug, getServiceTestimonials } from "../data"
+import ServiceHero from "../components/service-hero"
+import ServiceFeatures from "../components/service-features"
+import TestimonialCarousel from "../components/testimonial-carousel"
+import FAQSection from "../components/faq-section"
+import ServiceCta from "../components/service-cta"
+import RelatedServices from "../components/related-services"
 
 export const metadata: Metadata = {
   title: "Entrepreneurial Skills Development | Mancha Development Company",
@@ -25,7 +25,7 @@ export default function EntrepreneurialSkillsPage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <ServiceHero service={service} breadcrumbSlug="operations" />
+      <ServiceHero service={service} />
 
       {/* Overview Section */}
       <section className="py-16 md:py-24 bg-white">
@@ -41,7 +41,7 @@ export default function EntrepreneurialSkillsPage() {
                 their skills, streamline operations, and optimize team performance for sustainable growth.
               </p>
               <p className="text-lg text-slate-600 mb-6">
-                Whether you&apos;re a startup founder or an established business owner looking to scale, our expert team will
+                Whether you're a startup founder or an established business owner looking to scale, our expert team will
                 guide you through a customized program that addresses your specific challenges and goals.
               </p>
               <div className="bg-slate-100 p-6 rounded-lg">

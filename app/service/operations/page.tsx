@@ -41,7 +41,7 @@ export default function EntrepreneurialSkillsPage() {
                 their skills, streamline operations, and optimize team performance for sustainable growth.
               </p>
               <p className="text-lg text-slate-600 mb-6">
-                Whether you're a startup founder or an established business owner looking to scale, our expert team will
+                Whether you are a startup founder or an established business owner looking to scale, our expert team will
                 guide you through a customized program that addresses your specific challenges and goals.
               </p>
               <div className="bg-slate-100 p-6 rounded-lg">

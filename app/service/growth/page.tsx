@@ -42,7 +42,7 @@ export default function BusinessManagementPage() {
                 and capitalize on emerging market opportunities.
               </p>
               <p className="text-lg text-slate-600 mb-6">
-                Whether you're looking to expand into new markets, optimize your current operations, or prepare for a
+                Whether you are looking to expand into new markets, optimize your current operations, or prepare for a
                 significant business transition, our team of experienced consultants will work closely with you to
                 develop a comprehensive strategy for sustainable growth.
               </p>

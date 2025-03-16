@@ -139,7 +139,7 @@ export default function TrainerDevelopmentPage() {
               Comprehensive Trainer Development Solutions
             </h2>
             <p className="text-lg text-slate-600">
-              We offer a range of specialized services to help develop your team's capabilities and ensure effective
+              We offer a range of specialized services to help develop your teams capabilities and ensure effective
               knowledge transfer
             </p>
           </div>

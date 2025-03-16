@@ -1,44 +1,36 @@
-# mdentcare
- MDentCare
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-MDentCare is an advanced and user-friendly Hospital Management System designed to streamline hospital operations, enhance patient care, and improve staff efficiency. The system is tailored for dental clinics and hospitals, providing seamless integration of patient management, appointment scheduling, billing, and reporting features.
-Introduction
+## Getting Started
 
-MDentCare is designed to revolutionize the healthcare system by automating hospital workflows, reducing paperwork, and enabling real-time access to critical data. It is ideal for both small clinics and large hospitals, offering scalability and flexibility to meet diverse needs.
-Features
-For Patients
+First, run the development server:
 
-    Online appointment booking.
-    Access to treatment history.
-    Notifications for upcoming appointments.
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-For Staff
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-    Patient registration and profile management.
-    Efficient appointment scheduling.
-    Electronic Medical Records (EMR) for patients.
-    Medical staff management (doctors, nurses, and technicians).
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-For Admins
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-    Billing and payment processing.
-    Inventory and pharmacy management.
-    Reporting and analytics for hospital performance.
-    User roles and permissions for secure access.
+## Learn More
 
-Additional Features
+To learn more about Next.js, take a look at the following resources:
 
-    Multi-lingual support for better accessibility.
-    Mobile and web versions for seamless access.
-    Data backup and recovery mechanisms.
-    Compliance with healthcare data protection standards (e.g., HIPAA).
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-System Architecture
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-MDentCare employs a modern architecture for high performance and scalability:
+## Deploy on Vercel
 
-    Frontend: Built with React/Next.js for a responsive and intuitive user interface.
-    Backend: Powered by Node.js and Express.js for API management.
-    Database: Utilizes MongoDB for secure and scalable data storage.
-    Authentication: Secured with JSON Web Tokens (JWT).
-    Deployment: Compatible with cloud platforms like AWS, Azure, and Google Cloud.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

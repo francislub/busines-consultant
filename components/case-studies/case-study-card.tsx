@@ -6,7 +6,7 @@ import Link from "next/link"
 import { motion } from "framer-motion"
 import { ArrowRight, Award } from "lucide-react"
 
-import type { CaseStudy } from "../data"
+import type { CaseStudy } from "./data"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"

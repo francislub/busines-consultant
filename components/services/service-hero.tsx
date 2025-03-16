@@ -3,34 +3,34 @@
 import { motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight } from "lucide-react"
 
-import { Service } from "@/components/services/data"
+import type { Service } from "../data"
 import { Button } from "@/components/ui/button"
 
-interface ServiceHeroProps {
+export interface ServiceHeroProps {
   service: Service
-  // breadcrumbSlug: string
+  breadcrumbSlug: string
 }
 
-export default function ServiceHero({ service }: ServiceHeroProps) {
+export default function ServiceHero({ service, breadcrumbSlug }: ServiceHeroProps) {
   return (
     <>
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-slate-900 to-slate-800 py-20 md:py-28">
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute inset-0 bg-slate-900/70"></div>
-          <Image 
-            src={service.image || "/placeholder.svg?height=800&width=1600"} 
-            alt={service.title} 
-            fill 
+          <Image
+            src={service.image || "/placeholder.svg?height=800&width=1600"}
+            alt={service.title}
+            fill
             className="object-cover"
             priority
           />
         </div>
         <div className="container relative z-10 mx-auto px-4 md:px-6">
           <div className="flex flex-col max-w-3xl">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
@@ -38,7 +38,7 @@ export default function ServiceHero({ service }: ServiceHeroProps) {
             >
               {service.title}
             </motion.div>
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
@@ -46,7 +46,7 @@ export default function ServiceHero({ service }: ServiceHeroProps) {
             >
               {service.content.title}
             </motion.h1>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
@@ -54,21 +54,17 @@ export default function ServiceHero({ service }: ServiceHeroProps) {
             >
               {service.content.description}
             </motion.p>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-col sm:flex-row gap-4"
             >
               <Button asChild size="lg" className="bg-red-600 hover:bg-red-700">
-                <Link href="/contact">
-                  Schedule a Consultation
-                </Link>
+                <Link href="/contact">Schedule a Consultation</Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white/10">
-                <Link href="/case-studies">
-                  View Case Studies
-                </Link>
+                <Link href="/case-studies">View Case Studies</Link>
               </Button>
             </motion.div>
           </div>
@@ -94,3 +90,4 @@ export default function ServiceHero({ service }: ServiceHeroProps) {
     </>
   )
 }
+

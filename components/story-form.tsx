@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { ImageUpload } from "@/components/image-upload"
+// import { ImageUpload } from "@/components/image-upload"
 import { Loader2 } from 'lucide-react'
 
 const storySchema = z.object({
@@ -82,13 +82,13 @@ export function StoryForm({ initialData, onSubmit, isSubmitting }: StoryFormProp
         )}
       </div>
 
-      <div className="space-y-2">
+      {/* <div className="space-y-2">
         <Label>Image</Label>
         <ImageUpload
           value={image}
           onChange={onImageChange}
           disabled={isSubmitting}
-        />
+        /> */}
         {errors.image && (
           <p className="text-sm text-red-500">{errors.image.message}</p>
         )}

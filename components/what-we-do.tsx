@@ -1,5 +1,3 @@
-"use client"
-
 import { useState } from "react"
 import Image from "next/image"
 import { motion, AnimatePresence } from "framer-motion"
@@ -78,7 +76,6 @@ export default function WhatWeDo() {
       },
     },
   ];
-  
 
   return (
     <section className="bg-black py-20 px-4 md:px-8 lg:px-12">
@@ -128,7 +125,7 @@ export default function WhatWeDo() {
                 </motion.h3>
 
                 {/* Hover Content */}
-                <Link href={service.content.buttonLink}>
+                <Link href={service.content?.buttonLink || "#"}> {/* Added optional chaining */}
                 <AnimatePresence>
                   {hoveredService === service.id && service.content && (
                     <motion.div
@@ -144,12 +141,10 @@ export default function WhatWeDo() {
                       </div>
 
                       {/* Button with Link */}
-                      {/* <Link href={service.content.buttonLink}> */}
-                          <Button variant="default" className="bg-red-600 hover:bg-red-700 text-white w-full">
-                            {service.content.buttonText}
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </Button>
-                      {/* </Link> */}
+                      <Button variant="default" className="bg-red-600 hover:bg-red-700 text-white w-full">
+                        {service.content.buttonText}
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </Button>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -175,4 +170,3 @@ export default function WhatWeDo() {
     </section>
   )
 }
-

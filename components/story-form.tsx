@@ -82,9 +82,9 @@ export function StoryForm({ initialData, onSubmit, isSubmitting }: StoryFormProp
         )}
       </div>
 
-      {/* <div className="space-y-2">
+      <div className="space-y-2">
         <Label>Image</Label>
-        <ImageUpload
+        {/* <ImageUpload
           value={image}
           onChange={onImageChange}
           disabled={isSubmitting}

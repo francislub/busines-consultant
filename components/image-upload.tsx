@@ -10,10 +10,6 @@ interface ImageUploadProps {
   disabled?: boolean
 }
 
-interface UploadedFile {
-  url: string
-}
-
 export const ImageUpload = ({
   onChange,
   value,
@@ -43,7 +39,7 @@ export const ImageUpload = ({
       </div>
       {!disabled && (
         <div className="flex justify-center">
-          <UploadButton<OurFileRouter, UploadedFile[]>
+          <UploadButton<OurFileRouter>
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
               onChange(res?.[0]?.url)

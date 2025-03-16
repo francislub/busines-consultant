@@ -1,13 +1,13 @@
-import { useState } from "react"
-import { UploadButton } from "@uploadthing/react"
-import { OurFileRouter } from "@/lib/uploadthing"
-import Image from "next/image"
-import { Loader2 } from 'lucide-react'
+import { useState } from "react";
+import { UploadButton } from "@uploadthing/react";
+import { OurFileRouter } from "@/lib/uploadthing"; // Ensure this file exists and has the correct exports
+import Image from "next/image";
+import { Loader2 } from "lucide-react";
 
 interface ImageUploadProps {
-  onChange: (url?: string) => void
-  value: string
-  disabled?: boolean
+  onChange: (url?: string) => void;
+  value: string;
+  disabled?: boolean;
 }
 
 export const ImageUpload = ({
@@ -15,7 +15,7 @@ export const ImageUpload = ({
   value,
   disabled,
 }: ImageUploadProps) => {
-  const [isUploading, setIsUploading] = useState(false)
+  const [isUploading, setIsUploading] = useState(false);
 
   return (
     <div className="space-y-4 w-full flex flex-col justify-center items-center">
@@ -39,22 +39,22 @@ export const ImageUpload = ({
       </div>
       {!disabled && (
         <div className="flex justify-center">
-          <UploadButton<OurFileRouter, { url: string }>
+          <UploadButton<OurFileRouter>
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
-              onChange(res?.[0]?.url)
-              setIsUploading(false)
+              onChange(res?.[0]?.url); // Use the URL from the response
+              setIsUploading(false);
             }}
             onUploadError={(error: Error) => {
-              console.error(error)
-              setIsUploading(false)
+              console.error(error);
+              setIsUploading(false);
             }}
             onUploadBegin={() => {
-              setIsUploading(true)
+              setIsUploading(true);
             }}
           />
         </div>
       )}
     </div>
-  )
-}
+  );
+};

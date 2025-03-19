@@ -78,7 +78,7 @@ export default function ClientDashboard() {
     }
 
     if (status === "authenticated" && session?.user?.role === "ADMIN") {
-      router.push("/admin/dashboard")
+      router.push("/admin/adashboard")
       return
     }
 

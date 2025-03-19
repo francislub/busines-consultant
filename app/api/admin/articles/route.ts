@@ -1,48 +1,77 @@
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/lib/auth"
 import prisma from "@/lib/prisma"
-import { z } from "zod"
 
-const articleSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  image: z.string().url("Invalid image URL").or(z.literal("")).or(z.null()).optional(),
-})
-
-// GET all articles by the admin
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
-
-    if (!session || !session.user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
-    }
-
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ message: "Forbidden" }, { status: 403 })
-    }
-
     const articles = await prisma.article.findMany({
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        comments: {
+          include: {
+            author: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
       orderBy: {
         createdAt: "desc",
+      },
+    })
+
+    return NextResponse.json(articles)
+  } catch (error) {
+    console.error("Failed to fetch articles:", error)
+    return NextResponse.json({ error: "Failed to fetch articles" }, { status: 500 })
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+    const { title, content, image, category, slug } = body
+
+    if (!title || !content) {
+      return NextResponse.json({ error: "Title and content are required" }, { status: 400 })
+    }
+
+    // In a real app, you'd get the author ID from the session
+    // For demo purposes, we'll use the first admin user
+    const admin = await prisma.user.findFirst({
+      where: {
+        role: "ADMIN",
+      },
+    })
+
+    if (!admin) {
+      return NextResponse.json({ error: "No admin user found" }, { status: 404 })
+    }
+
+    const newArticle = await prisma.article.create({
+      data: {
+        title,
+        description: content, // Using content for description field
+        image,
+        authorId: admin.id,
       },
       include: {
         author: {
           select: {
             id: true,
             name: true,
-            email: true,
           },
         },
         comments: {
-          select: {
-            id: true,
-            content: true,
-            createdAt: true,
+          include: {
             author: {
               select: {
-                id: true,
                 name: true,
               },
             },
@@ -51,50 +80,78 @@ export async function GET() {
       },
     })
 
-    return NextResponse.json(articles)
+    return NextResponse.json(newArticle)
   } catch (error) {
-    console.error("Error fetching articles:", error)
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+    console.error("Failed to create article:", error)
+    return NextResponse.json({ error: "Failed to create article" }, { status: 500 })
   }
 }
 
-
-// POST a new article
-export async function POST(req: Request) {
+export async function PUT(request: Request) {
   try {
-    const session = await getServerSession(authOptions)
+    const body = await request.json()
+    const { id, title, content, image, category, slug } = body
 
-    if (!session || !session.user) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 })
+    if (!id || !title || !content) {
+      return NextResponse.json({ error: "ID, title, and content are required" }, { status: 400 })
     }
 
-    if (session.user.role !== "ADMIN") {
-      return NextResponse.json({ message: "Forbidden" }, { status: 403 })
-    }
-
-    const body = await req.json()
-    const { title, description, image } = articleSchema.parse(body)
-
-    const article = await prisma.article.create({
+    const updatedArticle = await prisma.article.update({
+      where: { id },
       data: {
         title,
-        description,
+        description: content, // Using content for description field
         image,
+      },
+      include: {
         author: {
-          connect: {
-            id: session.user.id,
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        comments: {
+          include: {
+            author: {
+              select: {
+                name: true,
+              },
+            },
           },
         },
       },
     })
 
-    return NextResponse.json(article, { status: 201 })
+    return NextResponse.json(updatedArticle)
   } catch (error) {
-    console.error("Error creating article:", error)
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({ message: "Invalid data", errors: error.errors }, { status: 400 })
+    console.error("Failed to update article:", error)
+    return NextResponse.json({ error: "Failed to update article" }, { status: 500 })
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const body = await request.json()
+    const { id } = body
+
+    if (!id) {
+      return NextResponse.json({ error: "Article ID is required" }, { status: 400 })
     }
-    return NextResponse.json({ message: "Internal server error" }, { status: 500 })
+
+    // Delete associated comments first
+    await prisma.comment.deleteMany({
+      where: { articleId: id },
+    })
+
+    // Then delete the article
+    await prisma.article.delete({
+      where: { id },
+    })
+
+    return NextResponse.json({ success: true })
+  } catch (error) {
+    console.error("Failed to delete article:", error)
+    return NextResponse.json({ error: "Failed to delete article" }, { status: 500 })
   }
 }
 

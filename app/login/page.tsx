@@ -1,22 +1,22 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
+import { signIn } from "next-auth/react"
+import Link from "next/link"
 import { z } from "zod"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { signIn } from "next-auth/react"
+import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Loader2 } from "lucide-react"
 
 const loginSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  password: z.string().min(1, { message: "Password is required" }),
+  email: z.string().email("Please enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 })
 
 type LoginFormValues = z.infer<typeof loginSchema>
@@ -24,9 +24,17 @@ type LoginFormValues = z.infer<typeof loginSchema>
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const callbackUrl = searchParams.get("callbackUrl") || "/admin/dashboard"
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
+  const [error, setError] = useState("")
+
+  useEffect(() => {
+    // Check for error in URL
+    const errorParam = searchParams.get("error")
+    if (errorParam === "CredentialsSignin") {
+      setError("Invalid email or password")
+    }
+  }, [searchParams])
 
   const {
     register,
@@ -34,21 +42,11 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
   })
 
-  useEffect(() => {
-    if (searchParams.get("registered") === "true") {
-      setSuccess("Account created successfully. Please log in.")
-    }
-  }, [searchParams])
-
-  async function onSubmit(data: LoginFormValues) {
+  const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true)
-    setError(null)
+    setError("")
 
     try {
       const result = await signIn("credentials", {
@@ -57,65 +55,52 @@ export default function LoginPage() {
         password: data.password,
       })
 
-      if (!result?.ok) {
-        throw new Error(result?.error || "Invalid email or password")
+      if (result?.error) {
+        setError("Invalid email or password")
+        return
       }
 
-      // Redirect based on user role
-      const userResponse = await fetch("/api/auth/me")
-      if (!userResponse.ok) {
-        throw new Error("Failed to fetch user data")
-      }
-
-      const userData = await userResponse.json()
-
-      if (userData.role === "ADMIN") {
-        router.push("/admin/dashboard")
-      } else {
-        router.push("/client/dashboard")
-      }
+      router.push(callbackUrl)
     } catch (error) {
-      console.error("Login error:", error)
-      setError(error instanceof Error ? error.message : "Invalid email or password")
+      console.error("Login error:", error);
+      setError("An error occurred. Please try again.")
     } finally {
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Login to your account</CardTitle>
-          <CardDescription>Enter your credentials to access your dashboard</CardDescription>
+          <CardTitle className="text-2xl font-bold">Login</CardTitle>
+          <CardDescription>Enter your credentials to access your account</CardDescription>
         </CardHeader>
+
         <CardContent>
           {error && (
             <Alert variant="destructive" className="mb-4">
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-          {success && (
-            <Alert className="mb-4 bg-green-50 text-green-800 border-green-200">
-              <AlertDescription>{success}</AlertDescription>
-            </Alert>
-          )}
+
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="john@example.com"
+                placeholder="name@example.com"
                 {...register("email")}
                 disabled={isLoading}
               />
               {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
             </div>
+
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <Link href="/forgot-password" className="text-sm text-red-500 hover:underline">
+                <Link href="/forgot-password" className="text-sm text-blue-500 hover:text-blue-600">
                   Forgot password?
                 </Link>
               </div>
@@ -128,23 +113,25 @@ export default function LoginPage() {
               />
               {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
             </div>
-            <Button type="submit" className="w-full bg-red-600 hover:bg-red-700" disabled={isLoading}>
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Logging in...
+                  Signing in...
                 </>
               ) : (
-                "Login"
+                "Sign in"
               )}
             </Button>
           </form>
         </CardContent>
+
         <CardFooter>
-          <p className="text-sm text-center w-full">
-            Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-red-500 hover:underline">
-              Register
+          <p className="text-center text-sm text-gray-600 w-full">
+              Don&apos;t have an account?{" "}
+            <Link href="/register" className="text-blue-500 hover:text-blue-600 font-medium">
+              Sign up
             </Link>
           </p>
         </CardFooter>

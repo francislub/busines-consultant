@@ -1,9 +1,17 @@
 import type { NextAuthOptions } from "next-auth"
+import { PrismaAdapter } from "@next-auth/prisma-adapter"
 import CredentialsProvider from "next-auth/providers/credentials"
-import { compare } from "bcrypt"
+import bcrypt from "bcrypt"
 import prisma from "@/lib/prisma"
 
 export const authOptions: NextAuthOptions = {
+  adapter: PrismaAdapter(prisma),
+  session: {
+    strategy: "jwt",
+  },
+  pages: {
+    signIn: "/login",
+  },
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -12,44 +20,31 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log("NextAuth authorize function called")
-
         if (!credentials?.email || !credentials?.password) {
-          console.log("Missing credentials")
-          throw new Error("Email and password are required")
+          return null
         }
 
-        try {
-          console.log("Finding user by email:", credentials.email)
-          const user = await prisma.user.findUnique({
-            where: {
-              email: credentials.email,
-            },
-          })
+        const user = await prisma.user.findUnique({
+          where: {
+            email: credentials.email,
+          },
+        })
 
-          if (!user) {
-            console.log("No user found with email:", credentials.email)
-            throw new Error("No user found with this email")
-          }
+        if (!user || !user.password) {
+          return null
+        }
 
-          console.log("Comparing passwords")
-          const isPasswordValid = await compare(credentials.password, user.password)
+        const isPasswordValid = await bcrypt.compare(credentials.password, user.password)
 
-          if (!isPasswordValid) {
-            console.log("Invalid password for user:", credentials.email)
-            throw new Error("Invalid password")
-          }
+        if (!isPasswordValid) {
+          return null
+        }
 
-          console.log("Authentication successful for user:", user.email)
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-            role: user.role,
-          }
-        } catch (error) {
-          console.error("Error in NextAuth authorize function:", error)
-          throw error
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
         }
       },
     }),
@@ -57,29 +52,22 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        console.log("JWT callback - adding user data to token")
         token.id = user.id
+        token.email = user.email
+        token.name = user.name
         token.role = user.role
       }
       return token
     },
     async session({ session, token }) {
-      if (token && session.user) {
-        console.log("Session callback - adding user data to session")
+      if (token) {
         session.user.id = token.id as string
+        session.user.email = token.email as string
+        session.user.name = token.name as string
         session.user.role = token.role as string
       }
       return session
     },
   },
-  pages: {
-    signIn: "/login",
-    error: "/login",
-  },
-  session: {
-    strategy: "jwt",
-  },
-  debug: process.env.NODE_ENV === "development",
-  secret: process.env.NEXTAUTH_SECRET ,
 }
 

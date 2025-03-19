@@ -7,7 +7,7 @@ import { SessionProvider } from "next-auth/react";
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const hideLayout = ["/register", "/login","/client/dashboard","/client/dashboard/inquiries","/client/dashboard/consultations","/client/dashboard/messages","/admin/dashboard","/admin/dashboard/stories","/admin/dashboard/articles","/admin/dashboard/teams","/admin/dashboard/comments","/forgot-password"].includes(pathname);
+  const hideLayout = ["/register", "/login","/client/dashboard","/client/dashboard/inquiries","/client/dashboard/consultations","/client/dashboard/messages","/admin/dashboard","/admin/stories","/admin/users","/admin/articles","/admin/settings","/admin/analytics","/admin/team","/admin/comments",,"/admin/contacts","/forgot-password"].includes(pathname);
 
   return (
     <>

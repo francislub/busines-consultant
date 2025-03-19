@@ -58,8 +58,10 @@ enum StoryCategory {
 model Article {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   title       String
-  description String
+  content     String
   image       String?
+  slug        String
+  category    String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   author      User      @relation(fields: [authorId], references: [id])

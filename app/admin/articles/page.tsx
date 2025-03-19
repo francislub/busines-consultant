@@ -23,6 +23,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { DataTable } from "@/components/data-table"
 import { articleColumns } from "./columns"
+import ImageInput from '@/components/ImageInput';
 import Image from "next/image"
 
 interface Article {
@@ -49,6 +50,7 @@ interface Article {
 
 export default function ArticlesPage() {
   const { toast } = useToast()
+  const [imageUrl, setImageUrl] = useState("")
   const [articles, setArticles] = useState<Article[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
@@ -62,7 +64,7 @@ export default function ArticlesPage() {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    image: "",
+    image: imageUrl,
     category: "",
     slug: "",
   })
@@ -207,7 +209,7 @@ export default function ArticlesPage() {
       setFormData({
         title: "",
         content: "",
-        image: "",
+        image: imageUrl,
         category: "",
         slug: "",
       })
@@ -315,12 +317,13 @@ export default function ArticlesPage() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="image">Image URL</Label>
+                <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="articleImageUploader" label="Article Image"/>
+                  {/* <Label htmlFor="image">Image URL</Label>
                   <Input
                     id="image"
                     value={formData.image}
                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  />
+                  /> */}
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
@@ -594,12 +597,13 @@ export default function ArticlesPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="edit-image">Image URL</Label>
+            <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="articleImageUploader" label="Article Image"/>
+              {/* <Label htmlFor="edit-image">Image URL</Label>
               <Input
                 id="edit-image"
                 value={formData.image}
                 onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              />
+              /> */}
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">

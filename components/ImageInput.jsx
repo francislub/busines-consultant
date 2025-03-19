@@ -9,7 +9,7 @@ export default function ImageInput({
   label,
   imageUrl = "",
   setImageUrl,
-  className = "col-span-full bg-slate-400",
+  className = "col-span-full ",
   endpoint = "",
 }) {
   return (

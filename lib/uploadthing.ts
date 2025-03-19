@@ -6,7 +6,7 @@ export const uploadRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
     .middleware(async () => {
       // This code runs on your server before upload
-      return { userId: "user_id" }
+      return { userId: "admin" }
     })
     .onUploadComplete(async ({ metadata, file }) => {
       // This code RUNS ON YOUR SERVER after upload

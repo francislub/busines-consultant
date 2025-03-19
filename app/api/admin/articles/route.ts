@@ -28,7 +28,7 @@ export async function GET() {
 
     return NextResponse.json(articles)
   } catch (error) {
-    console.error("Failed to fetch articles:", error)
+    console.error("Failed to fetch articles:", error instanceof Error ? error.message : "Unknown error")
     return NextResponse.json({ error: "Failed to fetch articles" }, { status: 500 })
   }
 }
@@ -36,10 +36,10 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { title, content, image, category, slug } = body
+    const { title, description, image, category, slug } = body
 
-    if (!title || !content) {
-      return NextResponse.json({ error: "Title and content are required" }, { status: 400 })
+    if (!title || !description) {
+      return NextResponse.json({ error: "Title and description are required" }, { status: 400 })
     }
 
     // In a real app, you'd get the author ID from the session
@@ -57,8 +57,10 @@ export async function POST(request: Request) {
     const newArticle = await prisma.article.create({
       data: {
         title,
-        description: content, // Using content for description field
+        description,
         image,
+        category: category || "Uncategorized",
+        slug: slug || title.toLowerCase().replace(/\s+/g, "-"),
         authorId: admin.id,
       },
       include: {
@@ -82,7 +84,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(newArticle)
   } catch (error) {
-    console.error("Failed to create article:", error)
+    console.error("Failed to create article:", error instanceof Error ? error.message : "Unknown error")
     return NextResponse.json({ error: "Failed to create article" }, { status: 500 })
   }
 }
@@ -90,18 +92,20 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json()
-    const { id, title, content, image, category, slug } = body
+    const { id, title, description, image, category, slug } = body
 
-    if (!id || !title || !content) {
-      return NextResponse.json({ error: "ID, title, and content are required" }, { status: 400 })
+    if (!id || !title || !description) {
+      return NextResponse.json({ error: "ID, title, and description are required" }, { status: 400 })
     }
 
     const updatedArticle = await prisma.article.update({
       where: { id },
       data: {
         title,
-        description: content, // Using content for description field
+        description,
         image,
+        category: category || "Uncategorized",
+        slug: slug || title.toLowerCase().replace(/\s+/g, "-"),
       },
       include: {
         author: {
@@ -124,7 +128,7 @@ export async function PUT(request: Request) {
 
     return NextResponse.json(updatedArticle)
   } catch (error) {
-    console.error("Failed to update article:", error)
+    console.error("Failed to update article:", error instanceof Error ? error.message : "Unknown error")
     return NextResponse.json({ error: "Failed to update article" }, { status: 500 })
   }
 }
@@ -150,7 +154,7 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Failed to delete article:", error)
+    console.error("Failed to delete article:", error instanceof Error ? error.message : "Unknown error")
     return NextResponse.json({ error: "Failed to delete article" }, { status: 500 })
   }
 }

@@ -168,6 +168,7 @@ export default function ArticlesPage() {
         category: "",
         slug: "",
       })
+      setImageUrl("")
       setIsCreating(false)
 
       toast({
@@ -215,6 +216,7 @@ export default function ArticlesPage() {
         category: "",
         slug: "",
       })
+      setImageUrl("")
       setIsEditing(false)
 
       toast({

@@ -9,15 +9,15 @@ export default function ImageInput({
   label,
   imageUrl = "",
   setImageUrl,
-  className = "col-span-full ",
+  className = "col-span-full text-blue-500",
   endpoint = "",
 }) {
   return (
     <div className={className}>
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 text-blank">
         <label
           htmlFor="course-image"
-          className="block text-sm font-medium leading-6 text-gray-900 dark:text-slate-50 mb-2"
+          className="block text-sm font-medium leading-6 text-gray-900 dark:text-black mb-2"
         >
           {label}
         </label>
@@ -38,7 +38,7 @@ export default function ImageInput({
           alt="Item image"
           width={1000}
           height={667}
-          className="w-full h-64 object-contain"
+          className="w-full h-64 object-contain " 
         />
       ) : (
         <UploadDropzone

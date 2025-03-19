@@ -29,7 +29,7 @@ import Image from "next/image"
 interface Article {
   id: string
   title: string
-  content: string
+  description: string
   image: string | null
   category: string
   slug: string
@@ -41,7 +41,7 @@ interface Article {
   }
   comments: {
     id: string
-    content: string
+    description: string
     author: {
       name: string
     }
@@ -63,8 +63,8 @@ export default function ArticlesPage() {
   const [view, setView] = useState<"grid" | "table">("grid")
   const [formData, setFormData] = useState({
     title: "",
-    content: "",
-    image: imageUrl,
+    description: "",
+    image: "",
     category: "",
     slug: "",
   })
@@ -103,7 +103,7 @@ export default function ArticlesPage() {
       setCurrentArticle(article)
       setFormData({
         title: article.title,
-        content: article.content,
+        description: article.description,
         image: article.image || "",
         category: article.category,
         slug: article.slug,
@@ -143,6 +143,7 @@ export default function ArticlesPage() {
       // Generate slug from title if not provided
       const formDataWithSlug = {
         ...formData,
+        image: imageUrl,
         slug: formData.slug || formData.title.toLowerCase().replace(/\s+/g, "-"),
       }
 
@@ -162,7 +163,7 @@ export default function ArticlesPage() {
       setArticles([newArticle, ...articles])
       setFormData({
         title: "",
-        content: "",
+        description: "",
         image: "",
         category: "",
         slug: "",
@@ -196,6 +197,7 @@ export default function ArticlesPage() {
         body: JSON.stringify({
           id: currentArticle.id,
           ...formData,
+          image: imageUrl,
         }),
       })
 
@@ -208,8 +210,8 @@ export default function ArticlesPage() {
       setCurrentArticle(null)
       setFormData({
         title: "",
-        content: "",
-        image: imageUrl,
+        description: "",
+        image: "",
         category: "",
         slug: "",
       })
@@ -308,22 +310,16 @@ export default function ArticlesPage() {
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label htmlFor="content">Content</Label>
+                  <Label htmlFor="description">Content</Label>
                   <Textarea
-                    id="content"
+                    id="description"
                     rows={10}
-                    value={formData.content}
-                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   />
                 </div>
                 <div className="grid gap-2">
                 <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="articleImageUploader" label="Article Image"/>
-                  {/* <Label htmlFor="image">Image URL</Label>
-                  <Input
-                    id="image"
-                    value={formData.image}
-                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  /> */}
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-2">
@@ -428,7 +424,7 @@ export default function ArticlesPage() {
                             setCurrentArticle(article)
                             setFormData({
                               title: article.title,
-                              content: article.content,
+                              description: article.description,
                               image: article.image || "",
                               category: article.category,
                               slug: article.slug,
@@ -459,7 +455,7 @@ export default function ArticlesPage() {
                     {article.category}
                   </Badge>
                   <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-                    {article.content ? article.content.substring(0, 150) + "..." : "No content"}
+                    {article.description ? article.description.substring(0, 150) + "..." : "No description"}
                   </p>
                 </CardContent>
                 <CardFooter className="flex justify-between p-4 pt-0 text-xs text-muted-foreground">
@@ -515,7 +511,7 @@ export default function ArticlesPage() {
 
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground mb-2">Content</h3>
-                <div className="rounded-md border p-4 whitespace-pre-wrap">{currentArticle.content}</div>
+                <div className="rounded-md border p-4 whitespace-pre-wrap">{currentArticle.description}</div>
               </div>
 
               <div>
@@ -529,7 +525,7 @@ export default function ArticlesPage() {
                         <div className="flex justify-between">
                           <span className="font-medium">{comment.author.name}</span>
                         </div>
-                        <p className="mt-2 text-sm">{comment.content}</p>
+                        <p className="mt-2 text-sm">{comment.description}</p>
                       </div>
                     ))}
                   </div>
@@ -545,7 +541,7 @@ export default function ArticlesPage() {
                     setCurrentArticle(currentArticle)
                     setFormData({
                       title: currentArticle.title,
-                      content: currentArticle.content,
+                      description: currentArticle.description,
                       image: currentArticle.image || "",
                       category: currentArticle.category,
                       slug: currentArticle.slug,
@@ -588,22 +584,17 @@ export default function ArticlesPage() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="edit-content">Content</Label>
+              <Label htmlFor="edit-description">Content</Label>
               <Textarea
-                id="edit-content"
+                id="edit-description"
                 rows={10}
-                value={formData.content}
-                onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
             </div>
             <div className="grid gap-2">
             <ImageInput imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint="articleImageUploader" label="Article Image"/>
-              {/* <Label htmlFor="edit-image">Image URL</Label>
-              <Input
-                id="edit-image"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              /> */}
+             
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="grid gap-2">

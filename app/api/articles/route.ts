@@ -36,10 +36,10 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { title, content, image, category, slug } = body
+    const { title, description, image, category, slug } = body
 
-    if (!title || !content) {
-      return NextResponse.json({ error: "Title and content are required" }, { status: 400 })
+    if (!title || !description) {
+      return NextResponse.json({ error: "Title and description are required" }, { status: 400 })
     }
 
     // In a real app, you'd get the author ID from the session
@@ -57,7 +57,7 @@ export async function POST(request: Request) {
     const newArticle = await prisma.article.create({
       data: {
         title,
-        content,
+        description,
         image,
         category: category || "Uncategorized",
         slug: slug || title.toLowerCase().replace(/\s+/g, "-"),
@@ -92,17 +92,17 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json()
-    const { id, title, content, image, category, slug } = body
+    const { id, title, description, image, category, slug } = body
 
-    if (!id || !title || !content) {
-      return NextResponse.json({ error: "ID, title, and content are required" }, { status: 400 })
+    if (!id || !title || !description) {
+      return NextResponse.json({ error: "ID, title, and description are required" }, { status: 400 })
     }
 
     const updatedArticle = await prisma.article.update({
       where: { id },
       data: {
         title,
-        content,
+        description,
         image,
         category: category || "Uncategorized",
         slug: slug || title.toLowerCase().replace(/\s+/g, "-"),

@@ -58,7 +58,7 @@ enum StoryCategory {
 model Article {
   id          String    @id @default(auto()) @map("_id") @db.ObjectId
   title       String
-  content     String
+  description     String
   image       String?
   slug        String
   category    String?

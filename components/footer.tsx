@@ -244,9 +244,9 @@ export default function Footer() {
               <div className="flex items-start space-x-3">
                 <MapPin className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
                 <address className="not-italic text-zinc-400 leading-relaxed">
-                  400 Interstate North Pkwy,
+                  Uganda,
                   <br />
-                  Dar Es Salaam
+                  Kampala
                 </address>
               </div>
 
@@ -259,8 +259,8 @@ export default function Footer() {
 
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-red-500 flex-shrink-0" />
-                <a href="tel:+14045665855" className="text-zinc-400 hover:text-white transition-colors">
-                  (404) 566-5855
+                <a href="tel:+0767-566-765" className="text-zinc-400 hover:text-white transition-colors">
+                0767 566 765
                 </a>
               </div>
 

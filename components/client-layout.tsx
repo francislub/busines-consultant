@@ -20,6 +20,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
     { name: "Inquiries", href: "/client/dashboard/inquiries", icon: MessageSquare },
     { name: "Consultations", href: "/client/dashboard/consultations", icon: Calendar },
     { name: "Messages", href: "/client/dashboard/messages", icon: MessageCircle },
+    { name: "Teams", href: "/client/dashboard/team", icon: MessageCircle },
   ]
 
   return (

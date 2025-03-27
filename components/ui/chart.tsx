@@ -1,9 +1,9 @@
 import type * as React from "react"
 
 export interface ChartTooltipContentProps {
-  payload: any[]
+  payload?: { name: string; value: number | string }[]
   label: string
-  formatter?: (value: any, name: string) => React.ReactNode
+  formatter?: (value: number | string, name: string) => React.ReactNode
 }
 
 export function ChartTooltipContent({ payload, label, formatter }: ChartTooltipContentProps) {
@@ -63,4 +63,3 @@ export const Chart = () => {
 export const ChartTooltip = () => {
   return null
 }
-

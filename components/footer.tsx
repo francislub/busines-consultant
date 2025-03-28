@@ -230,6 +230,7 @@ export default function Footer() {
                     <FooterLink href="/team">Our Team</FooterLink>
                     <FooterLink href="/careers">Careers</FooterLink>
                     <FooterLink href="/references">References</FooterLink>
+                    <FooterLink href="https://manchadmin.vercel.app/login">Admin</FooterLink>
                   </div>
                 </div>
               </div>
